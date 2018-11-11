@@ -85,7 +85,7 @@ class OUModulesBotPlugin(Plugin):
         modules = []
         any_found = False
         for module in self.EMBED_RE.findall(event.message.content)[:self.MODULES_COUNT_LIMIT]:
-            title = self.get_module_title(module[1:])
+            title = self.get_module_title(module[1:].upper())
             if title:
                 any_found = True
                 modules.append((module[1:].upper(), title))
