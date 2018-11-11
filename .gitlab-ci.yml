@@ -1,0 +1,7 @@
+image: docker:stable
+
+build:
+  stage: build
+  script:
+    - docker build --tag $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE:latest
