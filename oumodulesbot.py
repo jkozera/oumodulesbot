@@ -42,7 +42,7 @@ class OUModulesBotPlugin(Plugin):
         except Exception as e:
             return
         title = self.MODULE_RE.findall(html)
-        return title[0] if title else None
+        return title[0].replace('!', '') if title else None
 
     def command_modulename(self, event, message):
         codes = message.content.split()[1:]
