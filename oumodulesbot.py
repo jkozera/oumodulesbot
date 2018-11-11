@@ -12,6 +12,8 @@ import requests
 import pylru
 from gevent import monkey
 
+logger = logging.getLogger(__name__)
+
 monkey.patch_all()
 
 embeds_cache = pylru.lrucache(1000)
@@ -49,7 +51,6 @@ class OUModulesBotPlugin(Plugin):
         modules = []
         any_found = False
         for code in codes[:self.MODULES_COUNT_LIMIT]:
-            replies = []
             code = code.upper().replace('!', '')
             if code.isalnum() and 4 <= len(code) <= 6:
                 title = self.get_module_title(code)
@@ -57,7 +58,7 @@ class OUModulesBotPlugin(Plugin):
                     any_found = True
                     modules.append((code, title))
                 else:
-                    replies.append((code, 'not found'))
+                    modules.append((code, 'not found'))
         if any_found or len(codes) == 1:
             # don't spam just to say multiple not found
             self.post_modules(event, message, modules)
@@ -89,6 +90,8 @@ class OUModulesBotPlugin(Plugin):
             if title:
                 any_found = True
                 modules.append((module[1:].upper(), title))
+            else:
+                modules.append((module[1:].upper(), 'not found'))
         if any_found:
             # don't spam unless we're sure we at least foudn some modules to return
             # (different from 'command' mode, where we always reply if there's just one module)
@@ -104,9 +107,14 @@ class OUModulesBotPlugin(Plugin):
             content = ''
             for (code, title) in modules:
                 embed.add_field(name=code, value=' * {} '.format(title), inline=True)
-        else:
+        elif len(modules) > 0:
             code, title = modules[0]
             content = '{}: {}'.format(code, title)
+        else:
+            logger.error('No modules found!')
+            # should never happen, but for safety let's make sure
+            # that `content` is set below
+            return
 
         if modify_c:
             self.api_client.channels_messages_modify(modify_c.id, modify_m.id, content, embed=embed or {})
