@@ -6,6 +6,7 @@ services:
 build:
   stage: build
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker build --tag $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE:latest
   only: [master]
