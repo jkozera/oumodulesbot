@@ -1,7 +1,11 @@
 image: docker:stable
 
+services:
+  - docker:dind
+
 build:
   stage: build
   script:
     - docker build --tag $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE:latest
+  only: [master]
