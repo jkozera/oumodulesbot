@@ -97,6 +97,15 @@ class OUModulesBotPlugin(Plugin):
             # (different from 'command' mode, where we always reply if there's just one module)
             self.post_modules(event, message, modules)
 
+    def format_course(self, code, title, for_embed=False):
+        fmt = ' * {} ' if for_embed else '{}'
+        try_url = 'http://www.open.ac.uk/courses/modules/{}'.format(code.lower())
+        fmt_link = ' * [{}]({}) ' if for_embed else '{} ({})'
+        if requests.head(try_url).status_code == 200:
+            return fmt_link.format(title, try_url)
+        else:
+            return fmt.format(title)
+
     def post_modules(self, event, reply_to, modules):
         modify_c = None
         if event.message.id in embeds_cache:
@@ -106,10 +115,14 @@ class OUModulesBotPlugin(Plugin):
         if len(modules) > 1:
             content = ''
             for (code, title) in modules:
-                embed.add_field(name=code, value=' * {} '.format(title), inline=True)
+                embed.add_field(
+                    name=code,
+                    value=self.format_course(code, title, for_embed=True),
+                    inline=True
+                )
         elif len(modules) > 0:
             code, title = modules[0]
-            content = '{}: {}'.format(code, title)
+            content = self.format_course(code, title)
         else:
             logger.error('No modules found!')
             # should never happen, but for safety let's make sure
