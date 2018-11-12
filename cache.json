@@ -2536,7 +2536,8 @@
 , {"TD866": ["Environmental responsibility: ethics, policy and...", false]}
 , {"TG089": ["Digital photography: creating and sharing better...", false]}
 , {"THD204": ["Information technology and society", false]}
-, {"TM111": ["Introduction to computing and information...", true]}
+, {"TM111": ["Introduction to computing and information technology 1", true]}
+, {"TM112": ["Introduction to computing and information technology 2", true]}
 , {"TM128": ["Microsoft server technologies", false]}
 , {"TM129": ["Technologies in practice", true]}
 , {"TM190": ["The story of maths", false]}
