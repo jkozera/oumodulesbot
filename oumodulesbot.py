@@ -123,7 +123,7 @@ class OUModulesBotPlugin(Plugin):
 
         embed = MessageEmbed()
         if len(modules) > 1:
-            content = ''
+            content = ' '  # force removal when modifying
             for (code, title) in modules:
                 embed.add_field(
                     name=code,
