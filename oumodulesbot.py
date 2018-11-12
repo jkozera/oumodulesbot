@@ -112,9 +112,13 @@ class OUModulesBotPlugin(Plugin):
         try_url = 'http://www.open.ac.uk/courses/modules/{}'.format(code.lower())
         fmt_link = ' * [{}]({}) ' if for_embed else '{} ({})'
         if CACHE.get(code, ['', ''])[1] or requests.head(try_url).status_code == 200:
-            return fmt_link.format(title, try_url)
+            result = fmt_link.format(title, try_url)
         else:
-            return fmt.format(title)
+            result = fmt.format(title)
+        if for_embed:
+            return result
+        else:
+            return "{}: {}".format(code, result)
 
     def post_modules(self, event, reply_to, modules):
         modify_c = None
