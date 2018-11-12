@@ -20,6 +20,12 @@ embeds_cache = pylru.lrucache(1000)
 
 COMMAND_NAME = 'modulename'
 
+with open('cache.json', 'r') as f:
+    items  = json.load(f)
+CACHE = {k: v
+         for item in items
+         for k, v in item.iteritems()}
+
 class OUModulesBotPlugin(Plugin):
 
     MODULE_RE = re.compile(
@@ -37,6 +43,10 @@ class OUModulesBotPlugin(Plugin):
         return self._api_client
 
     def get_module_title(self, code):
+        if code.upper() in CACHE:
+            return CACHE[code.upper()][0].replace('!', '')
+        else:
+            logger.info('{} not in cache'.format(code))
         try:
             html = requests.get(
                 'http://www.open.ac.uk/library/digital-archive/module/xcri:{}'.format(code)
@@ -101,7 +111,7 @@ class OUModulesBotPlugin(Plugin):
         fmt = ' * {} ' if for_embed else '{}'
         try_url = 'http://www.open.ac.uk/courses/modules/{}'.format(code.lower())
         fmt_link = ' * [{}]({}) ' if for_embed else '{} ({})'
-        if requests.head(try_url).status_code == 200:
+        if CACHE.get(code, ['', ''])[1] or requests.head(try_url).status_code == 200:
             return fmt_link.format(title, try_url)
         else:
             return fmt.format(title)
