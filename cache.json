@@ -4,6 +4,7 @@
 , {"A102": ["An Arts Foundation Course", false]}
 , {"A103": ["An Introduction to the Humanities", false]}
 , {"A105": ["Voices, texts and material culture", true]}
+, {"A111": ["Discovering the arts and humanities", true]}
 , {"A150": ["Voices and texts", false]}
 , {"A151": ["Making sense of things: an introduction to...", false]}
 , {"A171": ["Start Writing for the Internet", false]}
@@ -42,12 +43,13 @@
 , {"A224": ["Inside music", true]}
 , {"A225": ["The British Isles and the modern world, 1789-1914", true]}
 , {"A226": ["Exploring art and visual culture", true]}
-, {"A227": ["Exploring Religion: places, practices, texts and experiences", true]}
+, {"A227": ["Exploring religion: places, practices, texts and experiences", true]}
 , {"A228": ["The Religious Quest", false]}
 , {"A229": ["Exploring the classical world", true]}
 , {"A230": ["Reading and studying literature", true]}
 , {"A231": ["The Growth of Religious Diversity", false]}
 , {"A232": ["Music, sound and technology", true]}
+, {"A233": ["Telling stories: the novel and beyond", true]}
 , {"A241": ["Elements of Music", false]}
 , {"A251": ["World archaeology", false]}
 , {"A275": ["Reading classical Greek: language and literature", true]}
@@ -238,16 +240,21 @@
 , {"B203": ["Business functions in context", false]}
 , {"B204": ["Making it happen! Leadership, influence and change", false]}
 , {"B205": ["Exploring innovation and entrepreneurship", true]}
+, {"B206": ["Understanding customers", true]}
 , {"B207": ["Shaping business opportunities", true]}
 , {"B208": ["Developing leadership", true]}
 , {"B291": ["Financial accounting", true]}
 , {"B292": ["Management accounting", true]}
+, {"B293": ["Financial accounting in context", true]}
+, {"B294": ["Financial analysis and decision making", true]}
 , {"B300": ["Business Behaviour in a Changing World", false]}
 , {"B301": ["Making sense of strategy", false]}
+, {"B302": ["Strategic management", true]}
 , {"B322": ["Investigating entrepreneurial opportunities", false]}
 , {"B324": ["Marketing and society", true]}
 , {"B325": ["Managing across organisational and cultural boundaries", true]}
 , {"B327": ["Creating futures : sustainable enterprise and innovation", true]}
+, {"B329": ["Leadership in a changing world", true]}
 , {"B392": ["Advanced management accounting", true]}
 , {"B521": ["Employer Support Pack", false]}
 , {"B532": ["New Tutoring in The OBS", false]}
@@ -345,6 +352,9 @@
 , {"B865": ["Managing research in the workplace", false]}
 , {"B866": ["Employment relations and employee engagement", false]}
 , {"B867": ["Workplace learning with coaching and mentoring", false]}
+, {"B870": ["Managing in a changing world", false]}
+, {"B872": ["Creating and sustaining value", false]}
+, {"B873": ["Effective strategic management in business and the public sector", false]}
 , {"B880": ["The Competent Manager", false]}
 , {"B881": ["Strategic Management", false]}
 , {"B882": ["Creative Management", false]}
@@ -426,10 +436,13 @@
 , {"BXH830": ["Making a difference", false]}
 , {"BXM191": ["Business and finance fundamentals in practice", true]}
 , {"BXM826": ["The Marketing/Management Research Project", false]}
+, {"BXM840": ["HR management in practice", false]}
+, {"BXM850": ["Corporate finance", false]}
 , {"BXM871": ["Managing in the digital economy", false]}
 , {"BXR635": ["The Management Challenge", false]}
 , {"BXR636": ["The Management Challenge", false]}
 , {"BXR868": ["Human resource management residential school", false]}
+, {"BXR873": ["Technology Management MBA strategic management residential school", false]}
 , {"BXS121": ["Managing in the workplace", false]}
 , {"BXX822": ["\"Creativity, Innovation & Change\"", false]}
 , {"BXY100": ["An introduction to business and management", false]}
@@ -844,6 +857,7 @@
 , {"D867": ["Critical criminological perspectives", false]}
 , {"D872": ["Forensic psychology: crime, offenders and policing", false]}
 , {"D873": ["Forensic psychology: witnesses, experts and...", false]}
+, {"D890": ["Development, policy and practice", false]}
 , {"DA204": ["Understanding media", false]}
 , {"DA301": ["Studying Family and Community History", false]}
 , {"DB123": ["You and your money: personal finance in context", false]}
@@ -883,7 +897,9 @@
 , {"DD309": ["Doing economics: people, markets and policy", true]}
 , {"DD310": ["Counselling and forensic psychology: investigating crime and therapy", true]}
 , {"DD313": ["International relations: continuity and change in global politics", true]}
+, {"DD316": ["Modern political ideas", true]}
 , {"DD317": ["Advancing social psychology", true]}
+, {"DD319": ["Environmental policy in an international context", true]}
 , {"DD801": ["Principles of social and psychological inquiry", false]}
 , {"DD802": ["Investigating forensic psychology", false]}
 , {"DD803": ["Evaluating psychology: research and practice", false]}
@@ -977,6 +993,7 @@
 , {"E229": ["Listening to young children: critical reflections", true]}
 , {"E230": ["Ways of knowing: language, mathematics and...", false]}
 , {"E233": ["Sport and exercise psychology: a case study approach", true]}
+, {"E235": ["Sport and exercise psychology in action", true]}
 , {"E241": ["Special Needs in Education", false]}
 , {"E242": ["Learning for All", false]}
 , {"E243": ["Inclusive Education", false]}
@@ -1585,7 +1602,7 @@
 , {"K101": ["An introduction to health and social care", true]}
 , {"K111": ["Social work practice learning (stage 1)", false]}
 , {"K112": ["The Reflective Social Worker", false]}
-, {"K113": ["Foundations for social work practice", false]}
+, {"K113": ["Foundations for social work practice", true]}
 , {"K114": ["Introducing professional practice", false]}
 , {"K115": ["Foundations for effective practice in youth justice", false]}
 , {"K116": ["Working with children and young people in trouble", false]}
@@ -1648,6 +1665,7 @@
 , {"K319": ["Adulthood, ageing and the life course", true]}
 , {"K320": ["Mentorship and assessment in health and social...", false]}
 , {"K321": ["Investigating Health and Well-Being", false]}
+, {"K323": ["Investigating health and social care", true]}
 , {"K330": ["\"Nursing: people, policy and practice\"", false]}
 , {"K331": ["Using research to develop practice", false]}
 , {"K332": ["Using evidence to develop practice", false]}
@@ -1694,6 +1712,7 @@
 , {"K800": ["Dissertation: a research project", false]}
 , {"K801": ["Dissertation: a practice innovation project", false]}
 , {"K802": ["Critical practice with children and young people", false]}
+, {"K803": ["Non-medical independent and supplementary prescribing", false]}
 , {"K821": ["Innovating in practice", false]}
 , {"K822": ["Leading health care", false]}
 , {"K823": ["Developing skills for practice", false]}
@@ -1794,9 +1813,9 @@
 , {"KZW315": ["Critical social work practice", false]}
 , {"KZX100": ["Understanding health and social care", false]}
 , {"L101": ["Introducing English language studies", true]}
-, {"L112": ["French Studies 1: Language and culture of the French-speaking world", true]}
-, {"L113": ["German Studies 1: Language and culture of the German-speaking world", true]}
-, {"L116": ["Spanish Studies 1: Language and culture of the Spanish-speaking world", true]}
+, {"L112": ["French studies 1 (intermediate)", true]}
+, {"L113": ["German studies 1 (intermediate)", true]}
+, {"L116": ["Spanish studies 1 (intermediate)", true]}
 , {"L120": ["Ouverture: intermediate French", false]}
 , {"L130": ["Auftakt: intermediate German", false]}
 , {"L140": ["En rumbo: intermediate Spanish", false]}
@@ -1816,7 +1835,10 @@
 , {"L213": ["Variationen", false]}
 , {"L220": ["Ouverture: A Fresh Start in French", false]}
 , {"L221": ["Envol: Take Off in French", false]}
+, {"L222": ["French Studies 2: language and culture of the French-speaking world", true]}
+, {"L223": ["German Studies 2: language and culture of the German-speaking world", true]}
 , {"L224": ["Horizons", false]}
+, {"L226": ["Spanish Studies 2: language and culture of the Spanish-speaking world", true]}
 , {"L230": ["Motive: moving on in German", false]}
 , {"L231": ["Motive: top-up", false]}
 , {"L302": ["Reflexions", false]}
@@ -2615,6 +2637,7 @@
 , {"T306": ["Managing complexity: a systems approach", false]}
 , {"T307": ["Innovation: designing for a sustainable future", false]}
 , {"T308": ["Environmental monitoring, modelling and control", false]}
+, {"T312": ["Electronics: signal processing, control and communications", true]}
 , {"T313": ["Renewable energy", true]}
 , {"T317": ["Innovation: designing for change", true]}
 , {"T319": ["Environmental management 2", true]}
@@ -2725,6 +2748,7 @@
 , {"TA212": ["The technology of music", false]}
 , {"TA225": ["The Technology of Music", false]}
 , {"TAD292": ["Art and Environment", false]}
+, {"TB871": ["Making strategy with systems thinking in practice", false]}
 , {"TD223": ["International development: making sense of a changing world", true]}
 , {"TD342": ["Systems Performance", false]}
 , {"TD866": ["Environmental responsibility: ethics, policy and...", false]}
@@ -2749,6 +2773,7 @@
 , {"TM354": ["Software engineering", true]}
 , {"TM355": ["Communications technology", true]}
 , {"TM356": ["Interaction design and the user experience", true]}
+, {"TM357": ["Cisco networking (CCNA) part 2", true]}
 , {"TM361": ["Graphs  Networks and Design", false]}
 , {"TM420": ["The M301 project A", false]}
 , {"TM421": ["The M301 project", false]}
@@ -2948,4 +2973,3 @@
 , {"YY105": ["Openings: Another Breakthrough - Assessment", false]}
 , {"YY158": ["Understanding health", false]}
 ]
-

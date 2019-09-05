@@ -103,8 +103,8 @@ def main():
                         print '"active" value mismatch:', code, oldcache_dict[code][1], active, ' - updating.'
                     elif is_really_active(active, code):
                         # However, some of the newcourses are in fact not active.
-                        print '"active" value mismatch:', code, oldcache_dict[code][1], really_active, ' - updating.'
-                        oldcache_dict[code] = (title, really_active)
+                        print '"active" value mismatch:', code, oldcache_dict[code][1], active, ' - updating.'
+                        oldcache_dict[code] = (title, active)
                 elif oldcache_dict.get(code, [title])[0] != title:
                     print '"title" value mismatch: ', oldcache_dict[code][0], '!=', title, ' - updating.'
                     oldcache_dict[code] = (title, is_really_active(active, code))
