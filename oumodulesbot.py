@@ -1,3 +1,6 @@
+from gevent import monkey
+monkey.patch_all()
+
 import json
 import logging
 import os
@@ -10,11 +13,8 @@ from disco.bot import Plugin, BotConfig, Bot
 from disco.types.message import MessageEmbed, Message
 import requests
 import pylru
-from gevent import monkey
 
 logger = logging.getLogger(__name__)
-
-monkey.patch_all()
 
 embeds_cache = pylru.lrucache(1000)
 
@@ -24,7 +24,7 @@ with open('cache.json', 'r') as f:
     items  = json.load(f)
 CACHE = {k: v
          for item in items
-         for k, v in item.iteritems()}
+         for k, v in item.items()}
 
 class OUModulesBotPlugin(Plugin):
 
@@ -50,7 +50,7 @@ class OUModulesBotPlugin(Plugin):
         try:
             html = requests.get(
                 'http://www.open.ac.uk/library/digital-archive/module/xcri:{}'.format(code)
-            ).content
+            ).content.decode('utf-8')
         except Exception as e:
             return
         title = self.MODULE_RE.findall(html)
@@ -103,8 +103,8 @@ class OUModulesBotPlugin(Plugin):
             else:
                 modules.append((module[1:].upper(), 'not found'))
         if any_found:
-            # don't spam unless we're sure we at least foudn some modules to return
-            # (different from 'command' mode, where we always reply if there's just one module)
+            # don't spam unless we're sure we at least found some modules to return
+            # (different from 'command' mode, where we may reply even if we can't find any)
             self.post_modules(event, message, modules)
 
     def format_course(self, code, title, for_embed=False):

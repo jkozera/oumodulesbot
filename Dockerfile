@@ -1,6 +1,6 @@
-FROM python:2
+FROM python:3.6
 
-RUN pip install disco-py requests pylru
+RUN pip install -r requirements.txt
 
 ADD oumodulesbot.py /
 ADD cache.json /

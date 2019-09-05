@@ -1,3 +1,2 @@
 disco-py
-requests
 pylru
