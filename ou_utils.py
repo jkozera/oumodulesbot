@@ -4,7 +4,9 @@ def get_module_level(module_code):
             return int(c)
 
 def get_module_url(module_code):
-    if get_module_level(module_code) == 8:
+    if get_module_level(module_code) == 0:
+        template = 'http://www.open.ac.uk/courses/short-courses/{}'
+    elif get_module_level(module_code) == 8:
         template = 'http://www.open.ac.uk/postgraduate/modules/{}'
     else:
         template = 'http://www.open.ac.uk/courses/modules/{}'
