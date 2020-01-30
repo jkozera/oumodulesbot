@@ -126,14 +126,14 @@
 , {"A432": ["Applying Virtue Ethics", false]}
 , {"A433": ["Early Modern Professions", false]}
 , {"A801": ["Ma in literature", false]}
-, {"A802": ["MA Creative Writing part 1", false]}
-, {"A803": ["MA Creative Writing part 2", false]}
+, {"A802": ["MA Creative Writing part 1", true]}
+, {"A803": ["MA Creative Writing part 2", true]}
 , {"A810": ["Postgrad Foundation Module in Literature", false]}
 , {"A811": ["The 18th Century Novel", false]}
 , {"A812": ["Poetry and Criticism 1830-1890", false]}
 , {"A813": ["Literature and Nation", false]}
-, {"A815": ["MA English part 1", false]}
-, {"A816": ["MA English part 2", false]}
+, {"A815": ["MA English part 1", true]}
+, {"A816": ["MA English part 2", true]}
 , {"A817": ["the literature dissertation", false]}
 , {"A818": ["Short Dissertation (Literature)", false]}
 , {"A819": ["Long Dissertation (Literature)", false]}
@@ -142,8 +142,8 @@
 , {"A822": ["Crime and Policing in Europe since c.1750", false]}
 , {"A823": ["Popular American Film 1945-1995", false]}
 , {"A824": ["\"Social Problems,Thought, Action\"", false]}
-, {"A825": ["MA History part 1", false]}
-, {"A826": ["MA History part 2", false]}
+, {"A825": ["MA History part 1", true]}
+, {"A826": ["MA History part 2", true]}
 , {"A827": ["The history dissertation", false]}
 , {"A828": ["MA short dissertation (history)", false]}
 , {"A829": ["MA long dissertation (history)", false]}
@@ -157,18 +157,18 @@
 , {"A839": ["MA long dissertation (popular culture line)", false]}
 , {"A840": ["Postgraduate foundation module in art history", false]}
 , {"A841": ["Themes and issues in contemporary art history", false]}
-, {"A843": ["MA Art History part 1", false]}
-, {"A844": ["MA Art History part 2", false]}
+, {"A843": ["MA Art History part 1", true]}
+, {"A844": ["MA Art History part 2", true]}
 , {"A847": ["The art history dissertation", false]}
 , {"A850": ["Postgraduate foundation module in philosophy", false]}
 , {"A851": ["Issues in contemporary social and political...", false]}
-, {"A853": ["MA Philosophy part 1", false]}
-, {"A854": ["MA Philosophy part 2", false]}
+, {"A853": ["MA Philosophy part 1", true]}
+, {"A854": ["MA Philosophy part 2", true]}
 , {"A857": ["The philosophy dissertation", false]}
 , {"A860": ["Postgraduate foundation module in classical studies", false]}
 , {"A861": ["The Greek theatre", false]}
-, {"A863": ["MA Classical Studies part 1", false]}
-, {"A864": ["MA Classical Studies part 2", false]}
+, {"A863": ["MA Classical Studies part 1", true]}
+, {"A864": ["MA Classical Studies part 2", true]}
 , {"A867": ["The classical studies dissertation", false]}
 , {"A870": ["Postgraduate foundation module in music", false]}
 , {"A871": ["Performances and repertories", false]}
@@ -314,8 +314,8 @@
 , {"B795": ["Managing Health Service Info and Finance", false]}
 , {"B796": ["Managing Health Service Delivery", false]}
 , {"B800": ["Foundations of Senior Management", false]}
-, {"B804": ["Dissertation (HRM)", false]}
-, {"B805": ["Dissertation (Finance)", false]}
+, {"B804": ["Dissertation (HRM)", true]}
+, {"B805": ["Dissertation (Finance)", true]}
 , {"B820": ["Strategy", false]}
 , {"B821": ["Financial strategy", false]}
 , {"B822": ["Creativity, innovation and change", false]}
@@ -330,7 +330,7 @@
 , {"B833": ["Leading healthcare innovation", false]}
 , {"B835": ["The dynamics of strategy", false]}
 , {"B836": ["Strategy and finance examination", false]}
-, {"B839": ["Making a difference: the management initiative", false]}
+, {"B839": ["Making a difference: the management initiative", true]}
 , {"B841": ["Managing Financial Risk", false]}
 , {"B844": ["Marketing in the 21st Century", false]}
 , {"B846": ["Entrepreneurship:Experience and Perspective", false]}
@@ -342,19 +342,19 @@
 , {"B855": ["The human resource professional", false]}
 , {"B856": ["Shaping public policy", false]}
 , {"B857": ["Current issues in public management and social...", false]}
-, {"B858": ["Introduction to corporate finance", false]}
-, {"B859": ["Financial strategy: valuation, governance and ethics", false]}
-, {"B860": ["Research methods for finance", false]}
-, {"B861": ["Investment and portfolio management", false]}
-, {"B862": ["Derivatives and risk management", false]}
-, {"B863": ["The human resource professional", false]}
-, {"B864": ["Human resource management in context", false]}
+, {"B858": ["Introduction to corporate finance", true]}
+, {"B859": ["Financial strategy: valuation, governance and ethics", true]}
+, {"B860": ["Research methods for finance", true]}
+, {"B861": ["Investment and portfolio management", true]}
+, {"B862": ["Derivatives and risk management", true]}
+, {"B863": ["The human resource professional", true]}
+, {"B864": ["Human resource management in context", true]}
 , {"B865": ["Managing research in the workplace", false]}
-, {"B866": ["Employment relations and employee engagement", false]}
-, {"B867": ["Workplace learning with coaching and mentoring", false]}
-, {"B870": ["Managing in a changing world", false]}
-, {"B872": ["Creating and sustaining value", false]}
-, {"B873": ["Effective strategic management in business and the public sector", false]}
+, {"B866": ["Employment relations and employee engagement", true]}
+, {"B867": ["Workplace learning with coaching and mentoring", true]}
+, {"B870": ["Managing in a changing world", true]}
+, {"B872": ["Creating and sustaining value", true]}
+, {"B873": ["Effective strategic management in business and the public sector", true]}
 , {"B880": ["The Competent Manager", false]}
 , {"B881": ["Strategic Management", false]}
 , {"B882": ["Creative Management", false]}
@@ -380,16 +380,16 @@
 , {"BB733": ["Managing projects and change - B730 block 3", false]}
 , {"BB785": ["Accounting and the PC for Managers", false]}
 , {"BB786": ["Managing Customer and Client Relations", false]}
-, {"BB831": ["Corporate finance", false]}
+, {"BB831": ["Corporate finance", true]}
 , {"BB835": ["The dynamics of strategy", false]}
 , {"BB841": ["Managing financial risk", false]}
-, {"BB842": ["Sustainable creative management", false]}
-, {"BB844": ["Marketing in the 21st century", false]}
+, {"BB842": ["Sustainable creative management", true]}
+, {"BB844": ["Marketing in the 21st century", true]}
 , {"BB845": ["Strategic human resource management", false]}
 , {"BB846": ["Entrepreneurship: experience and perspective", false]}
 , {"BB847": ["Management beyond the mainstream", false]}
-, {"BB848": ["Leadership and management in intercultural contexts", false]}
-, {"BB849": ["Supply chain management", false]}
+, {"BB848": ["Leadership and management in intercultural contexts", true]}
+, {"BB849": ["Supply chain management", true]}
 , {"BD131": ["Introduction to financial services", false]}
 , {"BG001": ["Managing projects and change", false]}
 , {"BG002": ["Managing operations", false]}
@@ -436,13 +436,13 @@
 , {"BXH830": ["Making a difference", false]}
 , {"BXM191": ["Business and finance fundamentals in practice", true]}
 , {"BXM826": ["The Marketing/Management Research Project", false]}
-, {"BXM840": ["HR management in practice", false]}
-, {"BXM850": ["Corporate finance", false]}
-, {"BXM871": ["Managing in the digital economy", false]}
+, {"BXM840": ["HR management in practice", true]}
+, {"BXM850": ["Corporate finance", true]}
+, {"BXM871": ["Managing in the digital economy", true]}
 , {"BXR635": ["The Management Challenge", false]}
 , {"BXR636": ["The Management Challenge", false]}
-, {"BXR868": ["Human resource management residential school", false]}
-, {"BXR873": ["Technology Management MBA strategic management residential school", false]}
+, {"BXR868": ["Human resource management residential school", true]}
+, {"BXR873": ["Technology Management MBA strategic management residential school", true]}
 , {"BXS121": ["Managing in the workplace", false]}
 , {"BXX822": ["\"Creativity, Innovation & Change\"", false]}
 , {"BXY100": ["An introduction to business and management", false]}
@@ -900,10 +900,10 @@
 , {"DD316": ["Modern political ideas", true]}
 , {"DD317": ["Advancing social psychology", true]}
 , {"DD319": ["Environmental policy in an international context", true]}
-, {"DD801": ["Principles of social and psychological inquiry", false]}
-, {"DD802": ["Investigating forensic psychology", false]}
-, {"DD803": ["Evaluating psychology: research and practice", false]}
-, {"DD804": ["Crime and global justice", false]}
+, {"DD801": ["Principles of social and psychological inquiry", true]}
+, {"DD802": ["Investigating forensic psychology", true]}
+, {"DD803": ["Evaluating psychology: research and practice", true]}
+, {"DD804": ["Crime and global justice", true]}
 , {"DE100": ["Investigating psychology 1", true]}
 , {"DE200": ["Investigating psychology 2", false]}
 , {"DE206": ["Social Work  Community Work and Society", false]}
@@ -1073,8 +1073,8 @@
 , {"E805": ["Critical issues in equity, diversity and...", false]}
 , {"E806": ["Apd Studs in Learning Difficulties in Educn", false]}
 , {"E807": ["Children and young people's worlds: frameworks...", false]}
-, {"E808": ["Children and young people's worlds", false]}
-, {"E809": ["Frameworks for critical practice with children and young people", false]}
+, {"E808": ["Children and young people's worlds", true]}
+, {"E809": ["Frameworks for critical practice with children and young people", true]}
 , {"E811": ["Educational Evaluation", false]}
 , {"E812": ["Classroom Studies", false]}
 , {"E813": ["Gender and Education", false]}
@@ -1202,21 +1202,21 @@
 , {"EE691": ["English as an Additional Language", false]}
 , {"EE692": ["Achievement and the Multi-ethnic Classroom", false]}
 , {"EE693": ["Teaching Literacy Thro Curriculum Subjects", false]}
-, {"EE811": ["Educational leadership: agency, professional...", false]}
-, {"EE812": ["Educational leadership: exploring strategy", false]}
-, {"EE813": ["MA Ed dissertation: leadership and management", false]}
-, {"EE814": ["Addressing inequality and difference in...", false]}
-, {"EE815": ["Understanding literacy: social justice and...", false]}
-, {"EE816": ["MA Ed dissertation: inclusive practice", false]}
-, {"EE817": ["Applied linguistics and English language", false]}
-, {"EE818": ["Language, literacy and learning", false]}
-, {"EE819": ["MA Ed dissertation: applied linguistics", false]}
+, {"EE811": ["Educational leadership: agency, professional learning and change", true]}
+, {"EE812": ["Educational leadership: exploring strategy", true]}
+, {"EE813": ["MA Ed dissertation: leadership and management", true]}
+, {"EE814": ["Addressing inequality and difference in educational practice", true]}
+, {"EE815": ["Understanding literacy: social justice and inclusive practice", true]}
+, {"EE816": ["MA Ed dissertation: inclusive practice", true]}
+, {"EE817": ["Applied linguistics and English language", true]}
+, {"EE818": ["Language, literacy and learning", true]}
+, {"EE819": ["MA Ed dissertation: applied linguistics", true]}
 , {"EE820": ["Strategic Leadership and Accountability", false]}
 , {"EE821": ["Teaching and learning", false]}
 , {"EE822": ["Leading and managing staff", false]}
 , {"EE823": ["Efficient and effective", false]}
-, {"EE830": ["Learning and teaching: educating the next generation", false]}
-, {"EE831": ["Learning and teaching: understanding your educational practice", false]}
+, {"EE830": ["Learning and teaching: educating the next generation", true]}
+, {"EE831": ["Learning and teaching: understanding your educational practice", true]}
 , {"EE850": ["Scottish Teachers", false]}
 , {"EE851": ["Self-evaluation", false]}
 , {"EE852": ["Education for all", false]}
@@ -1541,13 +1541,13 @@
 , {"H809": ["Practice-based research in educational technology", false]}
 , {"H810": ["Accessible online learning: supporting disabled...", false]}
 , {"H812": ["Postgraduate certificate in academic practice", false]}
-, {"H817": ["Openness and innovation in elearning", false]}
-, {"H818": ["The networked practitioner", false]}
-, {"H819": ["The critical researcher: educational technology...", false]}
+, {"H817": ["Openness and innovation in elearning", true]}
+, {"H818": ["The networked practitioner", true]}
+, {"H819": ["The critical researcher: educational technology in practice", true]}
 , {"H850": ["Teaching and course design in H.E.", false]}
 , {"H851": ["Teaching in Higher Education", false]}
 , {"H852": ["Course Design in Higher Education", false]}
-, {"H880": ["Technology-enhanced learning: foundations and futures", false]}
+, {"H880": ["Technology-enhanced learning: foundations and futures", true]}
 , {"HH600": ["Teaching & course design in HE", false]}
 , {"HH601": ["Teaching in HE", false]}
 , {"HH602": ["Course design in HE", false]}
@@ -1712,7 +1712,7 @@
 , {"K800": ["Dissertation: a research project", false]}
 , {"K801": ["Dissertation: a practice innovation project", false]}
 , {"K802": ["Critical practice with children and young people", false]}
-, {"K803": ["Non-medical independent and supplementary prescribing", false]}
+, {"K803": ["Non-medical independent and supplementary prescribing", true]}
 , {"K821": ["Innovating in practice", false]}
 , {"K822": ["Leading health care", false]}
 , {"K823": ["Developing skills for practice", false]}
@@ -1721,10 +1721,10 @@
 , {"K826": ["\"Change, Policy and Practice\"", false]}
 , {"K827": ["Leading healthcare improvements", false]}
 , {"K828": ["Researching and evaluating healthcare practice", false]}
-, {"K829": ["Transforming professional practice", false]}
+, {"K829": ["Transforming professional practice", true]}
 , {"K831": ["Advanced social work practice", false]}
-, {"K832": ["Developing social work practice", false]}
-, {"K833": ["Advancing social work practice", false]}
+, {"K832": ["Developing social work practice", true]}
+, {"K833": ["Advancing social work practice", true]}
 , {"KE206": ["Making a difference: working with children and young people", true]}
 , {"KE308": ["Youth: perspectives and practice", false]}
 , {"KE312": ["Working together for children", false]}
@@ -1744,7 +1744,7 @@
 , {"KK262": ["Learning Disabilities: Changing Perspective", false]}
 , {"KK670": ["Learning Difficulties - Managing the System", false]}
 , {"KRB000": ["Holding code for HSC Resource Bank", false]}
-, {"KXK829": ["Transforming professional practice", false]}
+, {"KXK829": ["Transforming professional practice", true]}
 , {"KYE115": ["Foundations for effective practice", false]}
 , {"KYE208": ["Youth Justice", false]}
 , {"KYE228": ["Delivering the Youth Rehabilitation Order", false]}
@@ -1886,9 +1886,9 @@
 , {"L572": ["Begegnung in Leipzig", false]}
 , {"L573": ["Al Timon", false]}
 , {"L576": ["Reflexions Top-up Assembly Pack", false]}
-, {"L801": ["Introduction to translation theory and practice", false]}
-, {"L802": ["Translation in practice", false]}
-, {"L803": ["Extended translation project/dissertation", false]}
+, {"L801": ["Introduction to translation theory and practice", true]}
+, {"L802": ["Translation in practice", true]}
+, {"L803": ["Extended translation project/dissertation", true]}
 , {"L900": ["Languages Tutor Pack", false]}
 , {"L901": ["Supporting Lifelong Language Learning", false]}
 , {"LB160": ["Professional communication skills for business...", false]}
@@ -2003,28 +2003,28 @@
 , {"M522": ["Passport to Professional Numeracy", false]}
 , {"M523": ["The Maths Good Study Guide", false]}
 , {"M801": ["Research project and dissertation", false]}
-, {"M811": ["Information security", false]}
-, {"M812": ["Digital forensics", false]}
-, {"M813": ["Software development", false]}
-, {"M814": ["Software engineering", false]}
-, {"M815": ["Project management", false]}
-, {"M816": ["Data management", false]}
-, {"M820": ["Calculus of variations and advanced calculus", false]}
-, {"M821": ["Nonlinear ordinary differential equations", false]}
+, {"M811": ["Information security", true]}
+, {"M812": ["Digital forensics", true]}
+, {"M813": ["Software development", true]}
+, {"M814": ["Software engineering", true]}
+, {"M815": ["Project management", true]}
+, {"M816": ["Data management", true]}
+, {"M820": ["Calculus of variations and advanced calculus", true]}
+, {"M821": ["Nonlinear ordinary differential equations", true]}
 , {"M822": ["Applied Functional Analysis", false]}
-, {"M823": ["Analytic number theory I", false]}
+, {"M823": ["Analytic number theory I", true]}
 , {"M824": ["Matrix Groups", false]}
 , {"M826": ["Functional analysis", false]}
 , {"M827": ["Applicable Differential Geometry", false]}
 , {"M828": ["Applied complex variables", false]}
-, {"M829": ["Analytic number theory II", false]}
+, {"M829": ["Analytic number theory II", true]}
 , {"M830": ["Introduction to Dynamic Programming", false]}
 , {"M831": ["The Historical Development of the Calculus", false]}
-, {"M832": ["Approximation theory", false]}
-, {"M833": ["Advanced mathematical methods", false]}
-, {"M835": ["Fractal geometry", false]}
-, {"M836": ["Coding theory", false]}
-, {"M840": ["Dissertation in mathematics", false]}
+, {"M832": ["Approximation theory", true]}
+, {"M833": ["Advanced mathematical methods", true]}
+, {"M835": ["Fractal geometry", true]}
+, {"M836": ["Coding theory", true]}
+, {"M840": ["Dissertation in mathematics", true]}
 , {"M841": ["The Lebesgue integral", false]}
 , {"M860": ["Software Engineering", false]}
 , {"M861": ["Computer architecture and operating systems", false]}
@@ -2432,17 +2432,17 @@
 , {"S802": ["Science and the Public", false]}
 , {"S803": ["Imaging and Molecules in Medicine", false]}
 , {"S804": ["Communicating Science", false]}
-, {"S807": ["Molecules in medicine", false]}
+, {"S807": ["Molecules in medicine", true]}
 , {"S808": ["Earth science: a systems approach", false]}
 , {"S809": ["Imaging in medicine", false]}
-, {"S810": ["MSc project module", false]}
+, {"S810": ["MSc project module", true]}
 , {"S811": ["Strategic management in life sciences and healthcare", false]}
-, {"S818": ["Space science", false]}
+, {"S818": ["Space science", true]}
 , {"S819": ["Radiotherapy and its physics", false]}
 , {"S820": ["MSc Project Module", false]}
 , {"S825": ["Developing research skills in science", false]}
-, {"S826": ["Introduction to mental health science", false]}
-, {"S827": ["Concept to clinic", false]}
+, {"S826": ["Introduction to mental health science", true]}
+, {"S827": ["Concept to clinic", true]}
 , {"S829": ["Further material in medical physics", false]}
 , {"SA188": ["Archaeology: the science of investigation", false]}
 , {"SD206": ["Biology: Brain and Behaviour", false]}
@@ -2451,7 +2451,7 @@
 , {"SD329": ["Signals and perception: the science of the senses", true]}
 , {"SD805": ["Issues in Brain and Behaviour", false]}
 , {"SD815": ["Contemporary issues in brain and behaviour:...", false]}
-, {"SD816": ["Core topics in mental health science: psychosis...", false]}
+, {"SD816": ["Core topics in mental health science: psychosis and dementia", true]}
 , {"SDK100": ["Science and health: an evidence-based approach", true]}
 , {"SDK122": ["Challenging obesity", false]}
 , {"SDK125": ["Introducing health sciences: a case study approach", false]}
@@ -2507,11 +2507,11 @@
 , {"SXF206": ["Environmental science", false]}
 , {"SXG288": ["Practical science: Earth and environment", false]}
 , {"SXG390": ["Science project course: geosciences", true]}
-, {"SXH810": ["MSc project module for MSc in Mental Health Science", false]}
+, {"SXH810": ["MSc project module for MSc in Mental Health Science", true]}
 , {"SXL288": ["Practical science: biology and health", false]}
 , {"SXL390": ["Researching biology and health science", true]}
 , {"SXM390": ["Science project course: frontiers in chemistry", true]}
-, {"SXM810": ["MSc project module for MSc in Medicinal Chemistry", false]}
+, {"SXM810": ["MSc project module for MSc in Medicinal Chemistry", true]}
 , {"SXN390": ["Science project course: science in society project", true]}
 , {"SXP288": ["Practical science: physics and astronomy", false]}
 , {"SXP390": ["Science project course: radiation and matter", true]}
@@ -2691,18 +2691,18 @@
 , {"T553": ["Systems Thinking and Practice: Modelling", false]}
 , {"T554": ["Systems Thinking and Practice: Systems Thinkers...", false]}
 , {"T801": ["MSc MMT", false]}
-, {"T802": ["Research project", false]}
-, {"T804": ["Finite element analysis: basic principles and...", false]}
-, {"T805": ["Manufacture materials design", false]}
+, {"T802": ["Research project", true]}
+, {"T804": ["Finite element analysis: basic principles and applications", true]}
+, {"T805": ["Manufacture materials design", true]}
 , {"T820": ["Switching for Digital Telecommunications", false]}
 , {"T821": ["Digital Telecommunication Systems", false]}
 , {"T822": ["Multi-Service Networks:Structures", false]}
 , {"T823": ["Multi-Service Networks: Controls", false]}
 , {"T824": ["Advanced routing - CCNP 1", false]}
 , {"T825": ["Wide area networks - CCNP 2", false]}
-, {"T826": ["Multilayer switching - CCNP 3", false]}
-, {"T827": ["Optimising networks - CCNP 4", false]}
-, {"T828": ["Network security", false]}
+, {"T826": ["Multilayer switching - CCNP 3", true]}
+, {"T827": ["Optimising networks - CCNP 4", true]}
+, {"T828": ["Network security", true]}
 , {"T830": ["Enterprise and the Environment", false]}
 , {"T831": ["Quality Management", false]}
 , {"T832": ["Quality Methods", false]}
@@ -2719,9 +2719,9 @@
 , {"T843": ["Management Information Systems", false]}
 , {"T845": ["Management of Professional Services", false]}
 , {"T846": ["Technology strategy", false]}
-, {"T847": ["The MSc professional project", false]}
-, {"T848": ["Managing technological innovation", false]}
-, {"T849": ["Strategic capabilities for technological innovation", false]}
+, {"T847": ["The MSc professional project", true]}
+, {"T848": ["Managing technological innovation", true]}
+, {"T849": ["Strategic capabilities for technological innovation", true]}
 , {"T850": ["Exploring Information Systems", false]}
 , {"T851": ["The information systems toolkit", false]}
 , {"T852": ["Learning from IS failures", false]}
@@ -2730,25 +2730,25 @@
 , {"T861": ["Environmental Ethics", false]}
 , {"T862": ["Enterprise and the environment", false]}
 , {"T863": ["Environmental decision making: a systems approach", false]}
-, {"T867": ["Managing for sustainability", false]}
+, {"T867": ["Managing for sustainability", true]}
 , {"T868": ["Environmental monitoring and protection", false]}
 , {"T869": ["Climate change: from science to lived experience", false]}
-, {"T877": ["Development: context and practice", false]}
-, {"T878": ["Capacities for managing development", false]}
-, {"T879": ["Conflict and development", false]}
+, {"T877": ["Development: context and practice", true]}
+, {"T878": ["Capacities for managing development", true]}
+, {"T879": ["Conflict and development", true]}
 , {"T881": ["Manufacture materials design", false]}
 , {"T882": ["Supply chain innovation, strategy and management", false]}
 , {"T883": ["Business operations: delivering value", false]}
 , {"T884": ["An introduction to finite element analysis", false]}
-, {"T885": ["Team engineering", false]}
+, {"T885": ["Team engineering", true]}
 , {"T889": ["Problem solving and improvement: quality and...", false]}
 , {"T890": ["Technology Policy and Innovation Research", false]}
-, {"T891": ["Making environmental decisions", false]}
+, {"T891": ["Making environmental decisions", true]}
 , {"T894": ["Professional practice portfolio", false]}
 , {"TA212": ["The technology of music", false]}
 , {"TA225": ["The Technology of Music", false]}
 , {"TAD292": ["Art and Environment", false]}
-, {"TB871": ["Making strategy with systems thinking in practice", false]}
+, {"TB871": ["Making strategy with systems thinking in practice", true]}
 , {"TD223": ["International development: making sense of a changing world", true]}
 , {"TD342": ["Systems Performance", false]}
 , {"TD866": ["Environmental responsibility: ethics, policy and...", false]}
@@ -2802,8 +2802,8 @@
 , {"TU812": ["Managing systemic change: inquiry, action and...", false]}
 , {"TU870": ["Capacities for managing development", false]}
 , {"TU871": ["Development: context and practice", false]}
-, {"TU872": ["Institutional development", false]}
-, {"TU874": ["The development management project", false]}
+, {"TU872": ["Institutional development", true]}
+, {"TU874": ["The development management project", true]}
 , {"TU875": ["War, intervention and development", false]}
 , {"TXR120": ["Engineering: an active introduction", false]}
 , {"TXR174": ["Technology in Action", false]}
@@ -2891,7 +2891,7 @@
 , {"U501": ["Doing postgraduate research", false]}
 , {"U529": ["Key skills: making a difference", false]}
 , {"U800": ["Research Methods Dissertation", false]}
-, {"U810": ["Continuing professional development in practice", false]}
+, {"U810": ["Continuing professional development in practice", true]}
 , {"UXC122": ["Make your experience count", false]}
 , {"UYA810": ["Continuing professional development in practice", false]}
 , {"UYB810": ["Continuing professional development in practice", false]}
@@ -2920,10 +2920,10 @@
 , {"W330": ["European Union law", false]}
 , {"W340": ["Law, society and culture", true]}
 , {"W350": ["Exploring legal boundaries", true]}
-, {"W800": ["The law dissertation", false]}
-, {"W820": ["Exploring legal meaning", false]}
-, {"W821": ["Exploring the boundaries of international law", false]}
-, {"W822": ["Business, human rights law and corporate social...", false]}
+, {"W800": ["The law dissertation", true]}
+, {"W820": ["Exploring legal meaning", true]}
+, {"W821": ["Exploring the boundaries of international law", true]}
+, {"W822": ["Business, human rights law and corporate social responsibility", true]}
 , {"WXM151": ["Law making in Scotland", true]}
 , {"WZL220": ["An Introduction to Law", false]}
 , {"WZL221": ["Criminal Law", false]}
