@@ -14,6 +14,8 @@ from disco.types.message import MessageEmbed, Message
 import requests
 import pylru
 
+from ou_utils import get_module_url
+
 logger = logging.getLogger(__name__)
 
 embeds_cache = pylru.lrucache(1000)
@@ -109,7 +111,7 @@ class OUModulesBotPlugin(Plugin):
 
     def format_course(self, code, title, for_embed=False):
         fmt = ' * {} ' if for_embed else '{}'
-        try_url = 'http://www.open.ac.uk/courses/modules/{}'.format(code.lower())
+        try_url = get_module_url(code)
         fmt_link = ' * [{}]({}) ' if for_embed else '{} ({})'
         if CACHE.get(code, ['', ''])[1] or requests.head(try_url).status_code == 200:
             result = fmt_link.format(title, try_url)

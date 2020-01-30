@@ -6,6 +6,8 @@ import urllib
 
 import requests
 
+from ou_utils import get_module_url
+
 PAGES = 165
 
 NEWCOURSE_QUERY = '''
@@ -72,7 +74,7 @@ def main():
     def is_really_active(active, code):
         if active:
             # no point in checking if API returns it as 'oldcourse'
-            try_url = 'http://www.open.ac.uk/courses/modules/{}'.format(code.lower())
+            try_url = get_module_url(code)
             print 'Trying', try_url, '->',
             try:
                 really_active = requests.head(try_url).status_code == 200
