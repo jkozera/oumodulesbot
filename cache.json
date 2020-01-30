@@ -393,25 +393,25 @@
 , {"BD131": ["Introduction to financial services", false]}
 , {"BG001": ["Managing projects and change", false]}
 , {"BG002": ["Managing operations", false]}
-, {"BG003": ["New managers' toolkit", false]}
-, {"BG004": ["Developing a strategic view", false]}
-, {"BG005": ["Developing your leadership style", false]}
-, {"BG006": ["Finance for non-financial managers", false]}
-, {"BG007": ["Project management", false]}
-, {"BG009": ["Managing performance through people", false]}
-, {"BG010": ["Recruiting and retaining the best people", false]}
-, {"BG011": ["Managing change", false]}
-, {"BG012": ["Developing better teams", false]}
-, {"BG013": ["Connecting with your customers", false]}
-, {"BG014": ["Introduction to clinical leadership", false]}
-, {"BG015": ["Developing yourself for clinical leadership", false]}
+, {"BG003": ["New managers' toolkit", true]}
+, {"BG004": ["Developing a strategic view", true]}
+, {"BG005": ["Developing your leadership style", true]}
+, {"BG006": ["Finance for non-financial managers", true]}
+, {"BG007": ["Project management", true]}
+, {"BG009": ["Managing performance through people", true]}
+, {"BG010": ["Recruiting and retaining the best people", true]}
+, {"BG011": ["Managing change", true]}
+, {"BG012": ["Developing better teams", true]}
+, {"BG013": ["Connecting with your customers", true]}
+, {"BG014": ["Introduction to clinical leadership", true]}
+, {"BG015": ["Developing yourself for clinical leadership", true]}
 , {"BG016": ["Developing and strengthening clinical teams", false]}
 , {"BG017": ["The NHS: structure, decision making and your service", false]}
 , {"BG018": ["Quality improvement: identifying opportunities", false]}
 , {"BG019": ["Lean thinking: improving service effectiveness", false]}
-, {"BG020": ["Commercial awareness", false]}
+, {"BG020": ["Commercial awareness", true]}
 , {"BG022": ["Developing high trust work relationships", false]}
-, {"BG023": ["Coaching for performance", false]}
+, {"BG023": ["Coaching for performance", true]}
 , {"BG024": ["Understanding financial technologies", false]}
 , {"BG500": ["Action Learning Set Model for Executive Education", false]}
 , {"BG501": ["Phoenix Life Executive Education Programme", false]}
@@ -1729,10 +1729,10 @@
 , {"KE308": ["Youth: perspectives and practice", false]}
 , {"KE312": ["Working together for children", false]}
 , {"KE322": ["Young lives, parenting and families", true]}
-, {"KG001": ["Improving end-of-life care", false]}
-, {"KG002": ["Improving dementia care", false]}
-, {"KG003": ["Improving diabetes management", false]}
-, {"KG004": ["Improving health and wellbeing", false]}
+, {"KG001": ["Improving end-of-life care", true]}
+, {"KG002": ["Improving dementia care", true]}
+, {"KG003": ["Improving diabetes management", true]}
+, {"KG004": ["Improving health and wellbeing", true]}
 , {"KG005": ["Facilitating learning in practice: an OpenLearn...", false]}
 , {"KG006": ["Facilitating learning in practice: mentorship...", false]}
 , {"KG097": ["Foundations for Self-directed Support in Scotland", false]}
@@ -1894,7 +1894,7 @@
 , {"LB160": ["Professional communication skills for business...", false]}
 , {"LB170": ["Communication skills for business and management", true]}
 , {"LB720": ["English communication skills for global managers...", false]}
-, {"LG001": ["Discovering Wales and Welsh", false]}
+, {"LG001": ["Discovering Wales and Welsh", true]}
 , {"LL120": ["Ouverture (APEL route)", false]}
 , {"LL130": ["Auftakt (APEL route)", false]}
 , {"LL203": ["Motive: APEL route (60 point)", false]}
@@ -2459,13 +2459,13 @@
 , {"SDT286": ["Biological Bases of Behaviour", false]}
 , {"SDT306": ["Environment: responding to change", true]}
 , {"SEH806": ["Contemporary issues in science learning", false]}
-, {"SG071": ["Science: microbes", false]}
+, {"SG071": ["Science: microbes", true]}
 , {"SG072": ["Science: sport, the science behind medals", false]}
-, {"SG073": ["Science: plants and people", false]}
-, {"SG075": ["Science: the frozen planet", false]}
-, {"SG076": ["Science: living without oil", false]}
-, {"SG077": ["Science: galaxies, stars and planets", false]}
-, {"SG089": ["Science: the weather", false]}
+, {"SG073": ["Science: plants and people", true]}
+, {"SG075": ["Science: the frozen planet", true]}
+, {"SG076": ["Science: living without oil", true]}
+, {"SG077": ["Science: galaxies, stars and planets", true]}
+, {"SG089": ["Science: the weather", true]}
 , {"SH804": ["Communicating science in the information age", false]}
 , {"SK120": ["Diabetes care", false]}
 , {"SK121": ["Understanding cardiovascular diseases", false]}
@@ -2479,8 +2479,8 @@
 , {"SK277": ["Human biology", false]}
 , {"SK299": ["Human biology", true]}
 , {"SK320": ["Infectious disease and public health", true]}
-, {"SKG085": ["Science: molecules, medicines and drugs", false]}
-, {"SKG095": ["Science: human genetics and health issues", false]}
+, {"SKG085": ["Science: molecules, medicines and drugs", true]}
+, {"SKG095": ["Science: human genetics and health issues", true]}
 , {"SM123": ["Physics and space", true]}
 , {"SM351": ["Quantum Theory and Atomic Structure", false]}
 , {"SM352": ["Electromagnetism", false]}
