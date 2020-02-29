@@ -1,1 +1,5 @@
+.envrc
+.python-version
+.vscode
 config.json
+*.egg-info
