@@ -2,11 +2,9 @@ import json
 import re
 import sys
 import time
-import urllib.request
 import urllib.parse
-import urllib.error
 
-import requests
+import httpx
 
 from ou_utils import get_module_url
 
@@ -37,7 +35,7 @@ FROM <http://data.open.ac.uk/context/oldcourses> WHERE {
 
 def query_data_ac_uk(query, offset, limit):
     q = {"query": "{} offset {} limit {}".format(query, offset, limit)}
-    results = requests.get(
+    results = httpx.get(
         "http://data.open.ac.uk/sparql?{}".format(urllib.parse.urlencode(q)),
         headers={"Accept": "application/sparql-results+json"},
     ).json()["results"]["bindings"]
@@ -67,7 +65,7 @@ def main():
     oldcache = json.load(open("cache.json"))
 
     oldcache_dict = {
-        k.encode(): (v.encode(), available)
+        k: (v, available)
         for d in oldcache
         for k, (v, available) in list(d.items())
     }
@@ -78,7 +76,7 @@ def main():
             try_url = get_module_url(code)
             print("Trying", try_url, "->", end=" ")
             try:
-                really_active = requests.head(try_url).status_code == 200
+                really_active = httpx.head(try_url).status_code == 200
             except Exception as e:
                 print("(%s)" % e, end=" ")
                 really_active = False
@@ -176,12 +174,12 @@ def main():
         url_template = (
             "http://www.open.ac.uk/library/digital-archive/module/list/page{}"
         )
-        html = requests.get(url_template.format(i)).content
+        html = httpx.get(url_template.format(i)).content
         for (code, module) in regex.findall(html):
             try_url = "http://www.open.ac.uk/courses/modules/{}".format(
                 code.lower()
             )
-            found = requests.head(try_url).status_code == 200
+            found = httpx.head(try_url).status_code == 200
             print(
                 '%s {"%s": ["%s", %s]}'
                 % (comma or " ", code, module, "true" if found else "false",)
