@@ -7,17 +7,13 @@ import discord
 import httpx
 import pylru
 
-from ou_utils import get_module_url
+from .ou_utils import get_module_url
 
 logger = logging.getLogger(__name__)
 
 replies_cache = pylru.lrucache(1000)
 
 COMMAND_NAME = "modulename"
-
-with open("cache.json", "r") as f:
-    items = json.load(f)
-CACHE = {k: v for item in items for k, v in item.items()}
 
 
 class OUModulesBot(discord.Client):
@@ -30,9 +26,15 @@ class OUModulesBot(discord.Client):
     EMBED_RE = re.compile(r"![a-zA-Z]{1,3}[0-9]{1,3}")
     MODULES_COUNT_LIMIT = 5
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        with open("cache.json", "r") as f:
+            items = json.load(f)
+        self.cache = {k: v for item in items for k, v in item.items()}
+
     async def get_module_title(self, code):
-        if code.upper() in CACHE:
-            return CACHE[code.upper()][0].replace("!", "")
+        if code.upper() in self.cache:
+            return self.cache[code.upper()][0].replace("!", "")
         else:
             logger.info("{} not in cache".format(code))
         try:
@@ -94,7 +96,7 @@ class OUModulesBot(discord.Client):
         fmt = " * {} " if for_embed else "{}"
         try_url = get_module_url(code)
         fmt_link = " * [{}]({}) " if for_embed else "{} ({})"
-        if CACHE.get(code, ["", ""])[1] or await self._check_is_http_200(
+        if self.cache.get(code, ["", ""])[1] or await self._check_is_http_200(
             try_url
         ):
             result = fmt_link.format(title, try_url)

@@ -1,4 +1,4 @@
-name: lint the code
+name: lint and test the code
 
 on:
   push:
@@ -27,3 +27,6 @@ jobs:
     - name: Lint with black
       run: |
         poetry run black --check .
+    - name: Run tests
+      run: |
+        poetry run pytest tests

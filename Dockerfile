@@ -6,4 +6,4 @@ RUN pip install -r requirements.txt
 ADD oumodulesbot /oumodulesbot
 ADD cache.json /
 
-CMD [ "python", "/oumodulesbot/oumodulesbot.py" ]
+CMD [ "python", "-m", "oumodulesbot.oumodulesbot" ]
