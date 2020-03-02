@@ -1,4 +1,3 @@
-import asyncio
 import json
 from unittest import mock
 
@@ -55,8 +54,7 @@ E2E_EXAMPLES = [
 def create_mock_message(contents, send_result="foo"):
     message = mock.Mock(spec=discord.Message)
     message.content = contents
-    send_result = asyncio.Future()
-    send_result.set_result(send_result)
+    message.channel.send = mock.AsyncMock()
     message.channel.send.return_value = send_result
     message.id = contents
     return message
