@@ -67,6 +67,8 @@ async def test_end_to_end_create(module_code, active, expected_result):
     bot = OUModulesBot()
     message = create_mock_message(f"foo !{module_code}")
     with mock.patch("httpx.AsyncClient.head") as head_mock:
+        head_mock.return_value = asyncio.Future()
+        head_mock.return_value.set_result(mock.Mock())
         await bot.on_message(message)
         if not active:
             # inactive modules are double-checked with http to provide a link
