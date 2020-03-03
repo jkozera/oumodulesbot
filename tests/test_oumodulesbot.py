@@ -13,12 +13,12 @@ pytestmark = pytest.mark.asyncio
 @pytest.fixture(autouse=True)
 def mock_cache(monkeypatch):
     def mock_load(f):
-        return [
-            {"A123": ["Mocked active module", True]},
-            {"A012": ["Mocked active short course", True]},
-            {"A888": ["Mocked active postgrad module", True]},
-            {"B321": ["Mocked inactive module", False]},
-        ]
+        return {
+            "A123": ["Mocked active module", "url1"],
+            "A012": ["Mocked active short course", "url2"],
+            "A888": ["Mocked active postgrad module", "url3"],
+            "B321": ["Mocked inactive module", None],
+        }
 
     monkeypatch.setattr(json, "load", mock_load)
 
@@ -26,30 +26,11 @@ def mock_cache(monkeypatch):
 examples_fields = "code,active,result"
 ModuleExample = namedtuple("ModuleExample", examples_fields)
 E2E_EXAMPLES = [
-    ModuleExample(
-        "A123",
-        True,
-        (
-            "A123: Mocked active module"
-            " (http://www.open.ac.uk/courses/modules/a123)"
-        ),
-    ),
+    ModuleExample("A123", True, ("A123: Mocked active module (url1)"),),
     ModuleExample("B321", False, "B321: Mocked inactive module"),
+    ModuleExample("A012", True, ("A012: Mocked active short course (url2)"),),
     ModuleExample(
-        "A012",
-        True,
-        (
-            "A012: Mocked active short course"
-            " (http://www.open.ac.uk/courses/short-courses/a012)"
-        ),
-    ),
-    ModuleExample(
-        "A888",
-        True,
-        (
-            "A888: Mocked active postgrad module"
-            " (http://www.open.ac.uk/postgraduate/modules/a888)"
-        ),
+        "A888", True, ("A888: Mocked active postgrad module (url3)"),
     ),
 ]
 
@@ -75,7 +56,8 @@ async def process_message(bot, message, module):
             # inactive modules are double-checked with http to provide a link
             # in case the inactive cache.json status is no longer valid:
             head_mock.assert_called_once_with(
-                f"http://www.open.ac.uk/courses/modules/{module.code.lower()}"
+                f"http://www.open.ac.uk/courses/modules/{module.code.lower()}",
+                allow_redirects=True,
             )
 
 

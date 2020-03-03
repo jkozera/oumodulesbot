@@ -6,18 +6,23 @@ import urllib.parse
 
 import httpx
 
-from ou_utils import get_module_url
 
 PAGES = 165
 
 NEWCOURSE_QUERY = """
 PREFIX xcri: <http://xcri.org/profiles/catalog/1.2/>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX mlo: <http://purl.org/net/mlo/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?course ?title
+SELECT ?id ?title ?url ?type
 FROM <http://data.open.ac.uk/context/xcri> WHERE {
   ?course a xcri:course .
-  ?course dc:title ?title
+  ?course xcri:internalID ?id .
+  ?course dc:title ?title .
+  ?course mlo:url ?url .
+  ?course rdf:type ?type
+  FILTER ( STRSTARTS ( STR ( ?type ), "http://data.open.ac.uk/ontology/" ) )
 }
 """
 
@@ -25,9 +30,10 @@ OLDCOURSE_QUERY = """
 PREFIX aiiso: <http://purl.org/vocab/aiiso/schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 
-SELECT ?course ?title
+SELECT ?id ?title
 FROM <http://data.open.ac.uk/context/oldcourses> WHERE {
   ?course a aiiso:Module .
+  ?course aiiso:code ?id .
   ?course dcterms:title ?title
 }
 """
@@ -49,117 +55,113 @@ def query_data_ac_uk(query, offset, limit):
 
 
 def dump_readable_json(dictionary):
-    res = ["["]
+    res = ["{"]
     comma = ""  # print comma after first module
     for k, v in sorted(dictionary.items()):
-        res.append("%s %s" % (comma or " ", json.dumps({k: [v[0], v[1]]})))
+        res.append(
+            "%s %s" % (comma or " ", json.dumps({k: [v[0], v[1]]})[1:-1])
+        )
         comma = ","
-    res.append("]")
+    res.append("}")
     return "\n".join(res + [""])
+
+
+def is_really_active(url, code):
+    if not url:
+        # no point in checking if API returns it as 'oldcourse'
+        return False
+    print("Trying", url, "->", end=" ")
+    try:
+        result = httpx.head(url, allow_redirects=True)
+    except Exception as e:
+        print("(%s)" % e, end=" ")
+        really_active = False
+    correct_redirect = code.lower() in str(result.url).lower()
+    really_active = correct_redirect and result.status_code == 200
+    print(f"{really_active} ({result.url}, {result.status_code})")
+    time.sleep(0.1)
+    return really_active
 
 
 def main():
     newcourses = query_data_ac_uk(NEWCOURSE_QUERY, 0, 3000)
     oldcourses = query_data_ac_uk(OLDCOURSE_QUERY, 0, 3000)
-
     oldcache = json.load(open("cache.json"))
 
-    oldcache_dict = {
-        k: (v, available)
-        for d in oldcache
-        for k, (v, available) in list(d.items())
-    }
+    seen_codes = set()
 
-    def is_really_active(active, code):
-        if active:
-            # no point in checking if API returns it as 'oldcourse'
-            try_url = get_module_url(code)
-            print("Trying", try_url, "->", end=" ")
-            try:
-                really_active = httpx.head(try_url).status_code == 200
-            except Exception as e:
-                print("(%s)" % e, end=" ")
-                really_active = False
-            print(really_active)
-            time.sleep(0.1)
-            return really_active
-        return active
-
-    for courses, active in [(oldcourses, False), (newcourses, True)]:
-        for c in courses:
-            if "course" in c["course"]:
-                code, title = (
-                    c["course"].split("/course/")[1].upper(),
-                    c["title"],
+    for c in oldcourses + newcourses:
+        code, title, url = c["id"], c["title"], c.get("url")
+        seen_codes.add(code)
+        if len(code) > 6:
+            if url:
+                print((code, title, "active and longer than 6 chars!"))
+            # These require the bot to be fixed, to handle names
+            # different from [a-zA-Z]{1,3}[0-9]{1,3}
+            # (u'SXHL288', u'Practical science: biology and health',
+            #  'active and longer than 6 chars!')
+            # (u'SXPA288', u'Practical science: physics and astronomy',
+            #  'active and longer than 6 chars!')
+            # (u'BXFT716',
+            #  u'MBA stage 1: management: perspectives and practice
+            #    (fast track)',
+            #  'active and longer than 6 chars!')
+            continue
+        if oldcache.get(code, ["", url])[1] != url:
+            print(
+                '"url" value different:', code, oldcache[code][1], url,
+            )
+            if not url:
+                # Assume that API correctly returns inactive courses.
+                print(
+                    '"url" value mismatch:',
+                    code,
+                    oldcache[code][1],
+                    url,
+                    " - updating.",
                 )
-                if len(code) > 6:
-                    if active:
-                        print((code, title, "active and longer than 6 chars!"))
-                    # These require the bot to be fixed, to handle names
-                    # different from [a-zA-Z]{1,3}[0-9]{1,3}
-                    # (u'SXHL288', u'Practical science: biology and health',
-                    #  'active and longer than 6 chars!')
-                    # (u'SXPA288', u'Practical science: physics and astronomy',
-                    #  'active and longer than 6 chars!')
-                    # (u'BXFT716',
-                    #  u'MBA stage 1: management: perspectives and practice
-                    #    (fast track)',
-                    #  'active and longer than 6 chars!')
-                    continue
-                if oldcache_dict.get(code, ["", active])[1] != active:
-                    print(
-                        '"active" value different:',
-                        code,
-                        oldcache_dict[code][1],
-                        active,
-                    )
-                    if not active:
-                        # Assume that API correctly returns inactive courses.
-                        print(
-                            '"active" value mismatch:',
-                            code,
-                            oldcache_dict[code][1],
-                            active,
-                            " - updating.",
-                        )
-                    elif is_really_active(active, code):
-                        # However, some of the newcourses are in fact
-                        # not active.
-                        print(
-                            '"active" value mismatch:',
-                            code,
-                            oldcache_dict[code][1],
-                            active,
-                            " - updating.",
-                        )
-                        oldcache_dict[code] = (title, active)
-                elif oldcache_dict.get(code, [title])[0] != title:
-                    print(
-                        '"title" value mismatch: ',
-                        oldcache_dict[code][0],
-                        "!=",
-                        title,
-                        " - updating.",
-                    )
-                    oldcache_dict[code] = (
-                        title,
-                        is_really_active(active, code),
-                    )
-                elif oldcache_dict.get(code) != (title, active):
-                    print(
-                        code,
-                        oldcache_dict.get(code),
-                        title,
-                        active,
-                        "mismatch - updating",
-                    )
-                    oldcache_dict[code] = (
-                        title,
-                        is_really_active(active, code),
-                    )
+                oldcache[code][1] = None
+            elif is_really_active(url, code):
+                # However, some of the newcourses are in fact not active, so
+                # we need the is_really_active check here.
+                print(
+                    '"url" value mismatch:',
+                    code,
+                    oldcache[code][1],
+                    url,
+                    " - updating.",
+                )
+                oldcache[code] = [title, url]
+        elif oldcache.get(code, [title])[0] != title:
+            print(
+                '"title" value mismatch: ',
+                oldcache[code][0],
+                "!=",
+                title,
+                " - updating.",
+            )
+            oldcache[code] = (
+                title,
+                is_really_active(url, code) and url,
+            )
+        elif oldcache.get(code) != [title, url]:
+            print(
+                code, oldcache.get(code), [title, url], "mismatch - updating",
+            )
+            oldcache[code] = (title, is_really_active(url, code) and url, url)
+
+    for code in oldcache:
+        _, url = oldcache[code]
+        if code in seen_codes or not url:
+            continue
+        # process unseen which have url set, which may be still valid
+        print(code, "missing - trying old url", url)
+        if not is_really_active(url, code):
+            print(code, "generated url failed - setting null")
+            oldcache[code][1] = None
 
     with open("newcache.json", "w") as f:
-        f.write(dump_readable_json(oldcache_dict))
+        f.write(dump_readable_json(oldcache))
     return
 
     # old scraping below, disabled for now:

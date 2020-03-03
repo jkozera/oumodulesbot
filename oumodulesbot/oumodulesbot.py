@@ -27,8 +27,7 @@ class OUModulesBot(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         with open("cache.json", "r") as f:
-            items = json.load(f)
-        self.cache = {k: v for item in items for k, v in item.items()}
+            self.cache = json.load(f)
 
     async def get_module_title(self, code):
         if code.upper() in self.cache:
@@ -65,18 +64,18 @@ class OUModulesBot(discord.Client):
             #  we can't find any)
             await self.post_modules(message, modules)
 
-    async def _check_is_http_200(self, url):
+    async def _check_is_module(self, url, code):
         async with httpx.AsyncClient() as client:
-            response = await client.head(url)
-            return response.status_code == 200
+            response = await client.head(url, allow_redirects=True)
+            correct_redirect = code.lower() in str(response.url).lower()
+            return correct_redirect and response.status_code == 200
 
     async def format_course(self, code, title, for_embed=False):
         fmt = " * {} " if for_embed else "{}"
-        try_url = get_module_url(code)
         fmt_link = " * [{}]({}) " if for_embed else "{} ({})"
-        if self.cache.get(code, ["", ""])[1] or await self._check_is_http_200(
-            try_url
-        ):
+        cached_url = self.cache.get(code, ["", ""])[1]
+        try_url = cached_url or get_module_url(code)
+        if cached_url or await self._check_is_module(try_url, code):
             result = fmt_link.format(title, try_url)
         else:
             result = fmt.format(title)
