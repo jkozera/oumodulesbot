@@ -13,8 +13,6 @@ logger = logging.getLogger(__name__)
 
 replies_cache = pylru.lrucache(1000)
 
-COMMAND_NAME = "modulename"
-
 
 class OUModulesBot(discord.Client):
 
@@ -49,27 +47,7 @@ class OUModulesBot(discord.Client):
         title = self.MODULE_RE.findall(html)
         return title[0].replace("!", "") if title else None
 
-    async def command_modulename(self, message):
-        codes = message.content.split()[1:]
-        modules = []
-        any_found = False
-        for code in codes[: self.MODULES_COUNT_LIMIT]:
-            code = code.upper().replace("!", "")
-            if code.isalnum() and 4 <= len(code) <= 6:
-                title = await self.get_module_title(code)
-                if title:
-                    any_found = True
-                    modules.append((code, title))
-                else:
-                    modules.append((code, "not found"))
-        if any_found or len(codes) == 1:
-            # don't spam just to say multiple not found
-            await self.post_modules(message, modules)
-
     async def do_embeds(self, message):
-        if message.content.startswith("!{}".format(COMMAND_NAME)):
-            await self.command_modulename(message)
-            return
         modules = []
         any_found = False
         for module in self.EMBED_RE.findall(message.content)[
