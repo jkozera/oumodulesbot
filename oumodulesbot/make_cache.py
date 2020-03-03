@@ -69,7 +69,7 @@ def dump_readable_json(dictionary):
 def is_really_active(url, code):
     if not url:
         # no point in checking if API returns it as 'oldcourse'
-        return False
+        return None
     print("Trying", url, "->", end=" ")
     try:
         result = httpx.head(url, allow_redirects=True)
