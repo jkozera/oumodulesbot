@@ -62,8 +62,6 @@ class OUModulesBot(discord.Client):
                 modules.append((module[1:].upper(), "not found"))
         if any_found:
             # don't spam unless we're sure we at least found some modules
-            # (different from 'command' mode, where we may reply even if
-            #  we can't find any)
             await self.post_modules(message, modules)
 
     async def _check_is_module(self, url, code):
