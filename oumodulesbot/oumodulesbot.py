@@ -16,12 +16,14 @@ replies_cache = pylru.lrucache(1000)
 
 class OUModulesBot(discord.Client):
 
+    CODE_RETPL = r"[a-zA-Z]{1,6}[0-9]{1,3}(?:-[a-zA-Z]{1,5})?"
+    EMBED_RE = re.compile(r"!" + CODE_RETPL)
+
     MODULE_RE = re.compile(
-        r"<title>[a-zA-Z]{1,3}[0-9]{1,3} (.*)"
-        " - Open University Digital Archive</title>"
+        r"<title>" + CODE_RETPL + r" (.*)"
+        r" - Open University Digital Archive</title>"
     )
 
-    EMBED_RE = re.compile(r"![a-zA-Z]{1,3}[0-9]{1,3}")
     MODULES_COUNT_LIMIT = 5
 
     def __init__(self, *args, **kwargs):

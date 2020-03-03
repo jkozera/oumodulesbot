@@ -93,20 +93,6 @@ def main():
     for c in oldcourses + newcourses:
         code, title, url = c["id"], c["title"], c.get("url")
         seen_codes.add(code)
-        if len(code) > 6:
-            if url:
-                print((code, title, "active and longer than 6 chars!"))
-            # These require the bot to be fixed, to handle names
-            # different from [a-zA-Z]{1,3}[0-9]{1,3}
-            # (u'SXHL288', u'Practical science: biology and health',
-            #  'active and longer than 6 chars!')
-            # (u'SXPA288', u'Practical science: physics and astronomy',
-            #  'active and longer than 6 chars!')
-            # (u'BXFT716',
-            #  u'MBA stage 1: management: perspectives and practice
-            #    (fast track)',
-            #  'active and longer than 6 chars!')
-            continue
         if oldcache.get(code, ["", url])[1] != url:
             print(
                 '"url" value different:', code, oldcache[code][1], url,
