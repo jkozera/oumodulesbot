@@ -148,7 +148,7 @@ def main():
             print(
                 code, oldcache.get(code), [title, url], "mismatch - updating",
             )
-            oldcache[code] = (title, is_really_active(url, code) and url, url)
+            oldcache[code] = (title, is_really_active(url, code) and url)
 
     for code in oldcache:
         _, url = oldcache[code]
