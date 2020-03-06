@@ -1,3 +1,5 @@
+from collections import namedtuple
+from typing import Iterable, List, Sequence
 import json
 import logging
 import os
@@ -12,6 +14,7 @@ from .ou_utils import MODULE_CODE_RE_TEMPLATE
 logger = logging.getLogger(__name__)
 
 replies_cache = pylru.lrucache(1000)
+Module = namedtuple("Module", "code,title")
 
 
 class OUModulesBot(discord.Client):
@@ -23,8 +26,12 @@ class OUModulesBot(discord.Client):
         super().__init__(*args, **kwargs)
         self.backend = OUModulesBackend()
 
-    async def do_mentions(self, message):
-        modules = []
+    async def process_mentions(self, message: discord.Message) -> None:
+        """
+        Process module code mentions from given `message`, and reply with
+        thieir names/URLs if any were found.
+        """
+        modules: List[Module] = []
         any_found = False
         for module in self.MENTION_RE.findall(message.content)[
             : self.MODULES_COUNT_LIMIT
@@ -33,14 +40,23 @@ class OUModulesBot(discord.Client):
             title = await self.backend.get_module_title(module_code)
             if title:
                 any_found = True
-                modules.append((module_code, title))
+                modules.append(Module(module_code, title))
             else:
-                modules.append((module_code, "not found"))
+                modules.append(Module(module_code, "not found"))
         if any_found:
             # don't spam unless we're sure we at least found some modules
             await self.post_modules(message, modules)
 
-    async def format_course(self, code, title, for_embed=False):
+    async def format_course(
+        self, code: str, title: str, for_embed: bool = False
+    ) -> str:
+        """
+        Return a string describing a module ready for posting to Discord,
+        for given module `code` and `title`. Appends URL if available.
+
+        Uses more compact formatting if `for_embed` is True, which should
+        be used if multiple modules are presented as part of an embed.
+        """
         fmt = " * {} " if for_embed else "{}"
         fmt_link = " * [{}]({}) " if for_embed else "{} ({})"
         url = await self.backend.get_module_url(code)
@@ -53,7 +69,12 @@ class OUModulesBot(discord.Client):
         else:
             return "{}: {}".format(code, result)
 
-    async def _embed_modules(self, embed, modules):
+    async def embed_modules(
+        self, embed: discord.Embed, modules: Iterable[Module]
+    ) -> None:
+        """
+        Adds `embed` fields for each provided module.
+        """
         for (code, title) in modules:
             embed.add_field(
                 name=code,
@@ -61,7 +82,16 @@ class OUModulesBot(discord.Client):
                 inline=True,
             )
 
-    async def post_modules(self, message, modules):
+    async def post_modules(
+        self, message: discord.Message, modules: Sequence[Module]
+    ) -> None:
+        """
+        Create or update a bot message for given users's input message,
+        and a list of modules.
+
+        Message is updated instead of created if the input was already replied
+        to, which means this time the input was edited.
+        """
         modify_message = None
         if message.id in replies_cache:
             modify_message = replies_cache[message.id]
@@ -69,8 +99,8 @@ class OUModulesBot(discord.Client):
         embed = discord.Embed()
         if len(modules) > 1:
             content = " "  # force removal when modifying
-            await self._embed_modules(embed, modules)
-        elif len(modules) > 0:
+            await self.embed_modules(embed, modules)
+        elif len(modules) == 1:
             code, title = modules[0]
             content = await self.format_course(code, title)
         else:
@@ -88,11 +118,13 @@ class OUModulesBot(discord.Client):
                 content, embed=embed if len(modules) > 1 else None
             )
 
-    async def on_message(self, message):
-        await self.do_mentions(message)
+    async def on_message(self, message: discord.Message) -> None:
+        await self.process_mentions(message)
 
-    async def on_message_edit(self, before, after):
-        await self.do_mentions(after)
+    async def on_message_edit(
+        self, before: discord.Message, after: discord.Message
+    ) -> None:
+        await self.process_mentions(after)
 
 
 def main():

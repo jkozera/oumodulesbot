@@ -23,8 +23,7 @@ def mock_cache(monkeypatch):
     monkeypatch.setattr(json, "load", mock_load)
 
 
-examples_fields = "code,active,result"
-ModuleExample = namedtuple("ModuleExample", examples_fields)
+ModuleExample = namedtuple("ModuleExample", "code,active,result")
 E2E_EXAMPLES = [
     ModuleExample("A123", True, ("A123: Mocked active module (url1)"),),
     ModuleExample("B321", False, "B321: Mocked inactive module"),
