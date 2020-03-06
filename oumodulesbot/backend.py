@@ -1,8 +1,9 @@
-import httpx
 import json
 import logging
 import re
 from typing import Mapping, Optional, Tuple
+
+import httpx
 
 from .ou_utils import MODULE_CODE_RE_TEMPLATE, get_module_url
 

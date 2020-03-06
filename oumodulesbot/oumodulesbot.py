@@ -1,9 +1,9 @@
-from collections import namedtuple
-from typing import Iterable, List, Sequence
 import json
 import logging
 import os
 import re
+from collections import namedtuple
+from typing import Iterable, List, Sequence
 
 import discord
 import pylru

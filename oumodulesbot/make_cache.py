@@ -6,7 +6,6 @@ import urllib.parse
 
 import httpx
 
-
 PAGES = 165
 
 NEWCOURSE_QUERY = """
