@@ -58,7 +58,7 @@ class OUModulesBot(discord.Client):
         be used if multiple modules are presented as part of an embed.
         """
         fmt = " * {} " if for_embed else "{}"
-        fmt_link = " * [{}]({}) " if for_embed else "{} ({})"
+        fmt_link = " * [{}]({}) " if for_embed else "{} (<{}>)"
         url = await self.backend.get_module_url(code)
         if url:
             result = fmt_link.format(title, url)
