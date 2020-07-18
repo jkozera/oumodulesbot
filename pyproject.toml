@@ -8,9 +8,9 @@ description = ""
 authors = ["Jerzy Kozera <jerzy.kozera@gmail.com>"]
 
 [tool.poetry.dependencies]
+"discord.py" = {git = "https://github.com/Rapptz/discord.py", rev = "0bc15fa130b8f01fe2d67446a2184d474b0d0ba7"}
 python = "^3.8"
 pylru = "^1.2.0"
-"discord.py" = "^1.3.2"
 httpx = "^0.11.1"
 
 [tool.poetry.dev-dependencies]
