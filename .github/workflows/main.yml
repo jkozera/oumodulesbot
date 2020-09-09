@@ -23,7 +23,7 @@ jobs:
         poetry install
     - name: Lint with isort
       run: |
-        poetry run isort -c
+        poetry run isort -c .
     - name: Lint with flake8
       run: |
         poetry run flake8 .
