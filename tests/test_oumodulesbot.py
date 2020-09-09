@@ -10,6 +10,9 @@ from oumodulesbot.oumodulesbot import OUModulesBot
 pytestmark = pytest.mark.asyncio
 
 
+QUALIFICATION_URL_TPL = "http://www.open.ac.uk/courses/qualifications/{code}"
+
+
 @pytest.fixture(autouse=True)
 def mock_cache(monkeypatch):
     def mock_load(f):
@@ -18,6 +21,7 @@ def mock_cache(monkeypatch):
             "A012": ["Mocked active short course", "url2"],
             "A888": ["Mocked active postgrad module", "url3"],
             "B321": ["Mocked inactive module", None],
+            "B31": ["Mocked inactive-actually-active qualification", None],
         }
 
     monkeypatch.setattr(json, "load", mock_load)
@@ -27,6 +31,13 @@ ModuleExample = namedtuple("ModuleExample", "code,active,result")
 E2E_EXAMPLES = [
     ModuleExample("A123", True, ("A123: Mocked active module (<url1>)"),),
     ModuleExample("B321", False, "B321: Mocked inactive module"),
+    ModuleExample(
+        "B31",
+        False,
+        "B31: Mocked inactive-actually-active qualification (<{url}>)".format(
+            url=QUALIFICATION_URL_TPL.format(code="b31"),
+        ),
+    ),
     ModuleExample(
         "A012", True, ("A012: Mocked active short course (<url2>)"),
     ),
@@ -45,21 +56,26 @@ def create_mock_message(contents, send_result="foo", id_override=None):
     return message
 
 
-async def process_message(bot, message, module):
+async def process_message(bot, message, result):
     """
     Pass the message to the bot, optionally verifying that appropriate checks
     are made for inactive modules.
     """
 
     with mock.patch("httpx.AsyncClient.head") as head_mock:
+        if "actually-active" in result.result:
+            head_mock.return_value.status_code = 200
+            head_mock.return_value.url = result.code
         await bot.on_message(message)
-        if not module.active:
-            # inactive modules are double-checked with http to provide a link
+        if not result.active:
+            code = result.code.lower()
+            # inactive results are double-checked with http to provide a link
             # in case the inactive cache.json status is no longer valid:
-            head_mock.assert_called_once_with(
-                f"http://www.open.ac.uk/courses/modules/{module.code.lower()}",
-                allow_redirects=True,
-            )
+            if "qualification" not in result.result:
+                url = f"http://www.open.ac.uk/courses/modules/{code}"
+            else:
+                url = QUALIFICATION_URL_TPL.format(code=code)
+            head_mock.assert_called_once_with(url, allow_redirects=True)
 
 
 @pytest.mark.parametrize("module", E2E_EXAMPLES)

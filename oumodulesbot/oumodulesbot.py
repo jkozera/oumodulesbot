@@ -2,24 +2,22 @@ import json
 import logging
 import os
 import re
-from collections import namedtuple
 from typing import Iterable, List, Sequence
 
 import discord
 import pylru
 
-from .backend import OUModulesBackend
-from .ou_utils import MODULE_CODE_RE_TEMPLATE
+from .backend import OUModulesBackend, Result
+from .ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
 
 logger = logging.getLogger(__name__)
 
 replies_cache = pylru.lrucache(1000)
-Module = namedtuple("Module", "code,title")
 
 
 class OUModulesBot(discord.Client):
 
-    MENTION_RE = re.compile(r"!" + MODULE_CODE_RE_TEMPLATE)
+    MENTION_RE = re.compile(r"!" + MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE)
     MODULES_COUNT_LIMIT = 5
 
     def __init__(self, *args, **kwargs):
@@ -31,25 +29,23 @@ class OUModulesBot(discord.Client):
         Process module code mentions from given `message`, and reply with
         thieir names/URLs if any were found.
         """
-        modules: List[Module] = []
+        results: List[Result] = []
         any_found = False
-        for module in self.MENTION_RE.findall(message.content)[
+        for code in self.MENTION_RE.findall(message.content)[
             : self.MODULES_COUNT_LIMIT
         ]:
-            module_code = module[1:].upper()
-            title = await self.backend.get_module_title(module_code)
-            if title:
+            code = code[1:].upper()
+            result = await self.backend.find_result_for_code(code)
+            if result:
                 any_found = True
-                modules.append(Module(module_code, title))
+                results.append(result)
             else:
-                modules.append(Module(module_code, "not found"))
+                results.append(Result(code, "not found", None))
         if any_found:
-            # don't spam unless we're sure we at least found some modules
-            await self.post_modules(message, modules)
+            # don't spam unless we're sure we at least found some results
+            await self.post_results(message, results)
 
-    async def format_course(
-        self, code: str, title: str, for_embed: bool = False
-    ) -> str:
+    def format_result(self, result: Result, for_embed: bool = False) -> str:
         """
         Return a string describing a module ready for posting to Discord,
         for given module `code` and `title`. Appends URL if available.
@@ -59,31 +55,32 @@ class OUModulesBot(discord.Client):
         """
         fmt = " * {} " if for_embed else "{}"
         fmt_link = " * [{}]({}) " if for_embed else "{} (<{}>)"
-        url = await self.backend.get_module_url(code)
-        if url:
-            result = fmt_link.format(title, url)
+        if result.url:
+            text = fmt_link.format(result.title, result.url)
         else:
-            result = fmt.format(title)
-        if for_embed:
-            return result
-        else:
-            return "{}: {}".format(code, result)
+            text = fmt.format(result.title)
 
-    async def embed_modules(
-        self, embed: discord.Embed, modules: Iterable[Module]
+        # remove '!'s just in case, to avoid infinite circular bot invokation
+        if for_embed:
+            return text.replace("!", "")
+        else:
+            return "{}: {}".format(result.code, text).replace("!", "")
+
+    def embed_results(
+        self, embed: discord.Embed, results: Iterable[Result]
     ) -> None:
         """
         Adds `embed` fields for each provided module.
         """
-        for (code, title) in modules:
+        for result in results:
             embed.add_field(
-                name=code,
-                value=await self.format_course(code, title, for_embed=True),
+                name=result.code,
+                value=self.format_result(result, for_embed=True),
                 inline=True,
             )
 
-    async def post_modules(
-        self, message: discord.Message, modules: Sequence[Module]
+    async def post_results(
+        self, message: discord.Message, results: Sequence[Result]
     ) -> None:
         """
         Create or update a bot message for given users's input message,
@@ -97,25 +94,24 @@ class OUModulesBot(discord.Client):
             modify_message = replies_cache[message.id]
 
         embed = discord.Embed()
-        if len(modules) > 1:
+        if len(results) > 1:
             content = " "  # force removal when modifying
-            await self.embed_modules(embed, modules)
-        elif len(modules) == 1:
-            code, title = modules[0]
-            content = await self.format_course(code, title)
+            self.embed_results(embed, results)
+        elif len(results) == 1:
+            content = self.format_result(results[0])
         else:
-            logger.error("No modules found!")
+            logger.error("No results found!")
             # should never happen, but for safety let's make sure
             # that `content` is set below
             return
 
         if modify_message:
             await modify_message.edit(
-                content=content, embed=embed if len(modules) > 1 else None
+                content=content, embed=embed if len(results) > 1 else None
             )
         else:
             replies_cache[message.id] = await message.channel.send(
-                content, embed=embed if len(modules) > 1 else None
+                content, embed=embed if len(results) > 1 else None
             )
 
     async def on_message(self, message: discord.Message) -> None:
