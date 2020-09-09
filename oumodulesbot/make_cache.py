@@ -1,56 +1,8 @@
 import json
-import re
-import sys
-import time
-import urllib.parse
 
-import httpx
+from ou_sparql_utils import is_really_active, query_oldcourses, query_xcri
 
 PAGES = 165
-
-NEWCOURSE_QUERY = """
-PREFIX xcri: <http://xcri.org/profiles/catalog/1.2/>
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-PREFIX mlo: <http://purl.org/net/mlo/>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-
-SELECT ?id ?title ?url ?type
-FROM <http://data.open.ac.uk/context/xcri> WHERE {
-  ?course a xcri:course .
-  ?course xcri:internalID ?id .
-  ?course dc:title ?title .
-  ?course mlo:url ?url .
-  ?course rdf:type ?type
-  FILTER ( STRSTARTS ( STR ( ?type ), "http://data.open.ac.uk/ontology/" ) )
-}
-"""
-
-OLDCOURSE_QUERY = """
-PREFIX aiiso: <http://purl.org/vocab/aiiso/schema#>
-PREFIX dcterms: <http://purl.org/dc/terms/>
-
-SELECT ?id ?title
-FROM <http://data.open.ac.uk/context/oldcourses> WHERE {
-  ?course a aiiso:Module .
-  ?course aiiso:code ?id .
-  ?course dcterms:title ?title
-}
-"""
-
-
-def query_data_ac_uk(query, offset, limit):
-    q = {"query": "{} offset {} limit {}".format(query, offset, limit)}
-    results = httpx.get(
-        "http://data.open.ac.uk/sparql?{}".format(urllib.parse.urlencode(q)),
-        headers={"Accept": "application/sparql-results+json"},
-    ).json()["results"]["bindings"]
-    retval = []
-    for result in results:
-        item = {}
-        for k in result:
-            item[k] = result[k]["value"]
-        retval.append(item)
-    return retval
 
 
 def dump_readable_json(dictionary):
@@ -65,31 +17,14 @@ def dump_readable_json(dictionary):
     return "\n".join(res + [""])
 
 
-def is_really_active(url, code):
-    if not url:
-        # no point in checking if API returns it as 'oldcourse'
-        return None
-    print("Trying", url, "->", end=" ")
-    try:
-        result = httpx.head(url, allow_redirects=True)
-    except Exception as e:
-        print("(%s)" % e, end=" ")
-        really_active = False
-    correct_redirect = code.lower() in str(result.url).lower()
-    really_active = correct_redirect and result.status_code == 200
-    print(f"{really_active} ({result.url}, {result.status_code})")
-    time.sleep(0.1)
-    return really_active
-
-
 def main():
-    newcourses = query_data_ac_uk(NEWCOURSE_QUERY, 0, 3000)
-    oldcourses = query_data_ac_uk(OLDCOURSE_QUERY, 0, 3000)
+    reqults_xcri = query_xcri()
+    results_oldcourses = query_oldcourses()
     oldcache = json.load(open("cache.json"))
 
     seen_codes = set()
 
-    for c in oldcourses + newcourses:
+    for c in results_oldcourses + reqults_xcri:
         code, title, url = c["id"], c["title"], c.get("url")
         seen_codes.add(code)
         if oldcache.get(code, ["", url])[1] != url:
@@ -150,7 +85,7 @@ def main():
     return
 
     # old scraping below, disabled for now:
-    print("[")
+    """print("[")
     regex = re.compile(
         r'<a href="/library/digital-archive/xcri:([a-zA-Z]{1,3}[0-9]{1,3})">'
         "(?!\1)(.+?)</a>"
@@ -173,7 +108,7 @@ def main():
             )
             comma = ","
             time.sleep(0.1)
-    print("]")
+    print("]")"""
 
 
 if __name__ == "__main__":
