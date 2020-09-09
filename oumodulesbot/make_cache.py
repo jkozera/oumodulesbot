@@ -1,6 +1,10 @@
 import json
 
-from ou_sparql_utils import is_really_active, query_oldcourses, query_xcri
+from oumodulesbot.ou_sparql_utils import (
+    is_really_active,
+    query_oldcourses,
+    query_xcri,
+)
 
 PAGES = 165
 
