@@ -29,7 +29,10 @@ def main():
         seen_codes.add(code)
         if oldcache.get(code, ["", url])[1] != url:
             print(
-                '"url" value different:', code, oldcache[code][1], url,
+                '"url" value different:',
+                code,
+                oldcache[code][1],
+                url,
             )
             if not url:
                 # Assume that API correctly returns inactive courses.
@@ -66,7 +69,10 @@ def main():
             )
         elif oldcache.get(code) != [title, url]:
             print(
-                code, oldcache.get(code), [title, url], "mismatch - updating",
+                code,
+                oldcache.get(code),
+                [title, url],
+                "mismatch - updating",
             )
             oldcache[code] = (title, is_really_active(url, code) and url)
 
