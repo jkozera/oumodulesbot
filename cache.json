@@ -248,7 +248,7 @@
 , "B206": ["Understanding customers", "http://www.open.ac.uk/courses/modules/b206"]
 , "B207": ["Shaping business opportunities", "http://www.open.ac.uk/courses/modules/b207"]
 , "B208": ["Developing leadership", "http://www.open.ac.uk/courses/modules/b208"]
-, "B291": ["Financial accounting", "http://www.open.ac.uk/courses/modules/b291"]
+, "B291": ["Financial accounting", null]
 , "B292": ["Management accounting", "http://www.open.ac.uk/courses/modules/b292"]
 , "B293": ["Financial accounting in context", "http://www.open.ac.uk/courses/modules/b293"]
 , "B294": ["Financial analysis and decision making", "http://www.open.ac.uk/courses/modules/b294"]
