@@ -2,12 +2,20 @@ import json
 import logging
 import re
 from collections import namedtuple
-from typing import Mapping, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import httpx
 
-from .ou_utils import MODULE_CODE_RE_TEMPLATE, get_possible_urls_from_code
+from .ou_utils import (
+    MODULE_CODE_RE_TEMPLATE,
+    MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE,
+    get_possible_urls_from_code,
+)
 
+HTML_TITLE_RE = re.compile(
+    fr"<title>\s*{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}\s*"
+    fr"\|\s*([^\|]+)\s*\| Open University\s*</title>"
+)
 logger = logging.getLogger(__name__)
 
 CacheItem = Tuple[str, Optional[str]]  # title, url
@@ -24,7 +32,7 @@ class OUModulesBackend:
     def __init__(self):
         with open("cache.json", "r") as f:
             cache_json = json.load(f)
-        self.cache: Mapping[str, CacheItem] = {
+        self.cache: Dict[str, CacheItem] = {
             k: tuple(v) for k, v in cache_json.items()
         }
 
@@ -44,8 +52,23 @@ class OUModulesBackend:
             url = cached_result[1] or await self._get_url_if_active(code)
             return Result(code, title, url)
 
-        # 2. Try OUDA:
         logger.info("{} not in cache".format(code))
+
+        # 2. Try URL (some active qualifications don't seem present in SPARQL
+        #             results, for example R51):
+        active_url = await self._get_url_if_active(code)
+        if active_url:
+            async with httpx.AsyncClient() as client:
+                text = (
+                    await client.get(active_url, allow_redirects=True)
+                ).text
+            found_title = HTML_TITLE_RE.search(text)
+            if found_title:
+                title = found_title.groups()[0]
+                self.cache[code] = (title, active_url)
+                return Result(code, title, active_url)
+
+        # 3. Try OUDA for old modules:
         try:
             url_template = (
                 "http://www.open.ac.uk/library/digital-archive/module/xcri:{}"
@@ -57,7 +80,8 @@ class OUModulesBackend:
             return None
         titles = self.MODULE_TITLE_RE.findall(html)
         if titles:
-            return Result(code, titles[0], await self._get_url_if_active(code))
+            self.cache[code] = (titles[0], active_url)
+            return Result(code, titles[0], active_url)
         return None
 
     async def _is_active_url(self, url: str, code: str) -> bool:
