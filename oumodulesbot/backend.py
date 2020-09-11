@@ -12,23 +12,38 @@ from .ou_utils import (
     get_possible_urls_from_code,
 )
 
-HTML_TITLE_RE = re.compile(
-    fr"<title>\s*{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}\s*"
-    fr"\|\s*([^\|]+)\s*\| Open University\s*</title>"
+MODULE_TITLE_OUDA_RE = re.compile(
+    r"<title>" + MODULE_CODE_RE_TEMPLATE + r" (.*?)"
+    r" - Open University Digital Archive</title>"
 )
+
+TITLE_SEPARATORS = [r"\|", "-"]
+HTML_TITLE_TEXT_RE_TEMPLATES = [
+    fr"{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
+    # the trailing '.*' allows ' Course' after 'Open University':
+    fr"\s*{sep}\s*(.+?)\s*{sep}\s*Open University.*"
+    for sep in TITLE_SEPARATORS
+]
+HTML_TITLE_TAG_RES = [
+    re.compile(fr"<title>\s*{template}\s*</title>")
+    for template in HTML_TITLE_TEXT_RE_TEMPLATES
+]
+
 logger = logging.getLogger(__name__)
 
 CacheItem = Tuple[str, Optional[str]]  # title, url
 Result = namedtuple("Result", "code,title,url")
 
 
+def find_title_in_html(html: str) -> Optional[str]:
+    for tag_re in HTML_TITLE_TAG_RES:
+        found = tag_re.search(html)
+        if found:
+            return found.groups()[0]
+    return None
+
+
 class OUModulesBackend:
-
-    MODULE_TITLE_RE = re.compile(
-        r"<title>" + MODULE_CODE_RE_TEMPLATE + r" (.*)"
-        r" - Open University Digital Archive</title>"
-    )
-
     def __init__(self):
         with open("cache.json", "r") as f:
             cache_json = json.load(f)
@@ -59,14 +74,13 @@ class OUModulesBackend:
         active_url = await self._get_url_if_active(code)
         if active_url:
             async with httpx.AsyncClient() as client:
-                text = (
+                html = (
                     await client.get(active_url, allow_redirects=True)
                 ).text
-            found_title = HTML_TITLE_RE.search(text)
+            found_title = find_title_in_html(html)
             if found_title:
-                title = found_title.groups()[0]
-                self.cache[code] = (title, active_url)
-                return Result(code, title, active_url)
+                self.cache[code] = (found_title, active_url)
+                return Result(code, found_title, active_url)
 
         # 3. Try OUDA for old modules:
         try:
@@ -78,7 +92,7 @@ class OUModulesBackend:
             html = response.content.decode("utf-8")
         except Exception:
             return None
-        titles = self.MODULE_TITLE_RE.findall(html)
+        titles = MODULE_TITLE_OUDA_RE.findall(html)
         if titles:
             self.cache[code] = (titles[0], active_url)
             return Result(code, titles[0], active_url)
