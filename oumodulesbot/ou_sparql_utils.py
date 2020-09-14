@@ -73,18 +73,23 @@ def find_module_or_qualification(code):
         return results_oldcourses[0]
 
 
-def is_really_active(url, code):
+def is_really_active(url, code, retries=2, retry_num=0):
     if not url:
         # no point in checking if API returns it as 'oldcourse'
         return None
-    print("Trying", url, "->", end=" ")
+    print(f"Trying {url} -> ", end=" ")
+    time.sleep(0.1)  # lame rate limiting
     try:
         result = httpx.head(url, allow_redirects=True)
     except Exception as e:
-        print("(%s)" % e, end=" ")
+        print("failed (%s)" % e, end=" ")
+        retry_num += 1
+        if retry_num <= retries:
+            print(f"- retrying ({retry_num} / {retries})")
+            return is_really_active(url, code, retries, retry_num=retry_num)
         really_active = False
-    correct_redirect = code.lower() in str(result.url).lower()
-    really_active = correct_redirect and result.status_code == 200
-    print(f"{really_active} ({result.url}, {result.status_code})")
-    time.sleep(0.1)
+    else:
+        correct_redirect = code.lower() in str(result.url).lower()
+        really_active = correct_redirect and result.status_code == 200
+        print(f"{really_active} ({result.url}, {result.status_code})")
     return really_active
