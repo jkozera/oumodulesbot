@@ -140,6 +140,11 @@ async def test_end_to_end_missing_module(get_mock):
     message = create_mock_message(f"foo !{fake_module.code}")
 
     # return matching data from httpx:
+    # 1. Empty SPARQL:
+    sparql_json = {"results": {"bindings": []}}
+    get_mock.return_value.json = lambda: sparql_json
+
+    # 2. OUDA HTML:
     get_mock.return_value.content = (
         "not really html but matches the regex:"
         f"<title>{fake_module.code} Some Random Module"
@@ -153,7 +158,8 @@ async def test_end_to_end_missing_module(get_mock):
     )
 
     # ensure httpx was called with appropriate URL:
-    get_mock.assert_called_once_with(
+    get_mock.assert_called_with(
+        # ignore SPARQL calls
         "http://www.open.ac.uk/library/digital-archive/module/"
         f"xcri:{fake_module.code}"
     )
