@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from oumodulesbot.ou_sparql_utils import (
@@ -21,9 +22,9 @@ def dump_readable_json(dictionary):
     return "\n".join(res + [""])
 
 
-def main():
-    reqults_xcri = query_xcri()
-    results_oldcourses = query_oldcourses()
+async def main():
+    reqults_xcri = await query_xcri()
+    results_oldcourses = await query_oldcourses()
     oldcache = json.load(open("cache.json"))
 
     seen_codes = set()
@@ -87,7 +88,7 @@ def main():
         # process unseen which have url set, which may be still valid
         print(code, "missing - trying old url", url)
         if not is_really_active(url, code):
-            print(code, "generated url failed - setting null")
+            print(code, "cached url failed - setting null")
             oldcache[code][1] = None
 
     with open("newcache.json", "w") as f:
@@ -122,4 +123,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

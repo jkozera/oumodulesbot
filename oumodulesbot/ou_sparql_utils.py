@@ -34,23 +34,23 @@ FROM <http://data.open.ac.uk/context/oldcourses> WHERE {{
 }}
 """
 
+QUERY_FORMAT_DEFAULTS = {"addfilter": ""}
 
-def query_data_ac_uk(query, offset, limit):
+
+async def query_data_ac_uk(query, offset, limit):
     q = {"query": "{} offset {} limit {}".format(query, offset, limit)}
-    results = httpx.get(
-        "http://data.open.ac.uk/sparql?{}".format(urllib.parse.urlencode(q)),
-        headers={"Accept": "application/sparql-results+json"},
-    ).json()["results"]["bindings"]
+    async with httpx.AsyncClient() as client:
+        http_result = client.get(
+            f"http://data.open.ac.uk/sparql?{urllib.parse.urlencode(q)}",
+            headers={"Accept": "application/sparql-results+json"},
+        )
     retval = []
-    for result in results:
+    for result in (await http_result).json()["results"]["bindings"]:
         item = {}
         for k in result:
             item[k] = result[k]["value"]
         retval.append(item)
     return retval
-
-
-QUERY_FORMAT_DEFAULTS = {"addfilter": ""}
 
 
 def query_xcri(limit=3000, **format_kwargs):
