@@ -1,14 +1,15 @@
 import json
 import logging
 import re
-from collections import namedtuple
 from typing import Dict, Optional, Tuple
 
 import httpx
 
+from .ou_sparql_utils import find_module_or_qualification
 from .ou_utils import (
     MODULE_CODE_RE_TEMPLATE,
     MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE,
+    Result,
     get_possible_urls_from_code,
 )
 
@@ -36,7 +37,6 @@ HTML_TITLE_TAG_RES = [
 logger = logging.getLogger(__name__)
 
 CacheItem = Tuple[str, Optional[str]]  # title, url
-Result = namedtuple("Result", "code,title,url")
 
 
 def find_title_in_html(html: str) -> Optional[str]:
@@ -61,7 +61,12 @@ class OUModulesBackend:
             return None
         cached_result = self.cache[code]
         title = cached_result[0]
-        url = cached_result[1] or await self._get_url_if_active(code)
+        url = cached_result[1]
+        # try to make sure URL really isn't reachable, by autogenerating one:
+        if (not url) and (active_url := await self._get_url_if_active(code)):
+            url = active_url
+            logger.info(f"{code} has no url in cache, but {url} is reachable")
+            self.cache[code] = (title, url)
         return Result(code, title, url)
 
     async def _try_url(self, code) -> Optional[Result]:
@@ -70,7 +75,6 @@ class OUModulesBackend:
                 result = await client.get(active_url, allow_redirects=True)
             if found_title := find_title_in_html(result.text):
                 logger.info(f"{code} found via {active_url}")
-                self.cache[code] = (found_title, active_url)
                 return Result(code, found_title, active_url)
         logger.info(f"{code} can't be found via module URL")
         return None
@@ -88,7 +92,6 @@ class OUModulesBackend:
 
         if titles := MODULE_TITLE_OUDA_RE.findall(html):
             logger.info(f"{code} found via OUDA")
-            self.cache[code] = (titles[0], None)
             return Result(code, titles[0], None)
         logger.info(f"{code} can't be found via {ouda_url}")
         return None
@@ -105,17 +108,21 @@ class OUModulesBackend:
         # 1. Try cached title:
         if cached_result := await self._try_cache(code):
             return cached_result
-
-        # 2. Try scraping URL with HTML description
+        # 2. Try SPARQL queries:
+        elif sparql_result := await find_module_or_qualification(code):
+            result = sparql_result
+        # 3. Try scraping URL with HTML description
         #    (some results used to be missing from SPARQL results):
-        if result := await self._try_url(code):
-            return result
+        elif url_scraping_result := await self._try_url(code):
+            result = url_scraping_result
+        # 4. Try OUDA for old modules:
+        elif ouda_result := await self._try_ouda(code):
+            result = ouda_result
+        else:
+            return None
 
-        # 3. Try OUDA for old modules:
-        if result := await self._try_ouda(code):
-            return result
-
-        return None
+        self.cache[code] = (result.title, result.url)
+        return result
 
     async def _is_active_url(self, url: str, code: str) -> bool:
         """

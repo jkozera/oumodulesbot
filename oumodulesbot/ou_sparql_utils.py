@@ -1,7 +1,11 @@
+import logging
 import time
 import urllib.parse
+from typing import Optional
 
 import httpx
+
+from .ou_utils import Result
 
 XCRI_QUERY = """
 PREFIX xcri: <http://xcri.org/profiles/catalog/1.2/>
@@ -36,6 +40,8 @@ FROM <http://data.open.ac.uk/context/oldcourses> WHERE {{
 
 QUERY_FORMAT_DEFAULTS = {"addfilter": ""}
 
+logger = logging.getLogger(__name__)
+
 
 async def query_data_ac_uk(query, offset, limit):
     q = {"query": "{} offset {} limit {}".format(query, offset, limit)}
@@ -53,24 +59,34 @@ async def query_data_ac_uk(query, offset, limit):
     return retval
 
 
-def query_xcri(limit=3000, **format_kwargs):
-    format_kwargs = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
-    return query_data_ac_uk(XCRI_QUERY.format(**format_kwargs), 0, limit)
+async def query_xcri(limit=3000, **format_kwargs):
+    format_ = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
+    return await query_data_ac_uk(XCRI_QUERY.format(**format_), 0, limit)
 
 
-def query_oldcourses(limit=3000, **format_kwargs):
-    format_kwargs = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
-    return query_data_ac_uk(OLDCOURSE_QUERY.format(**format_kwargs), 0, limit)
+async def query_oldcourses(limit=3000, **format_kwargs):
+    format_ = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
+    return await query_data_ac_uk(OLDCOURSE_QUERY.format(**format_), 0, limit)
 
 
-def find_module_or_qualification(code):
-    addfilter = f'FILTER(?id = "{code}")'
-    results_xcri = query_xcri(addfilter=addfilter, limit=1)
-    if results_xcri:
-        return results_xcri[0]
-    results_oldcourses = query_oldcourses(addfilter=addfilter, limit=1)
-    if results_oldcourses:
-        return results_oldcourses[0]
+async def find_module_or_qualification(code) -> Optional[Result]:
+    code = code.upper()
+    filter_ = f'FILTER(?id = "{code}")'
+
+    logger.info(f"Querying {code} from xcri")
+    if results_xcri := await query_xcri(addfilter=filter_, limit=1):
+        result = results_xcri[0]
+        logger.info(f"xcri result: {result}")
+        return Result(code, result["title"], result.get("url"))
+
+    logger.info(f"Querying {code} from oldcourses")
+    if results_old := await query_oldcourses(addfilter=filter_, limit=1):
+        result = results_old[0]
+        logger.info(f"oldcourses result: {result}")
+        return Result(code, result["title"], result.get("url"))
+
+    logger.info(f"Querying {code} from SPARQL returned no results")
+    return None
 
 
 def is_really_active(url, code, retries=2, retry_num=0):
