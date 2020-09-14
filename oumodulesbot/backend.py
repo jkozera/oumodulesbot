@@ -16,6 +16,10 @@ MODULE_TITLE_OUDA_RE = re.compile(
     r"<title>" + MODULE_CODE_RE_TEMPLATE + r" (.*?)"
     r" - Open University Digital Archive</title>"
 )
+OUDA_URL_TEMPLATE = (
+    "http://www.open.ac.uk/library/digital-archive/module/xcri:{}"
+)
+
 
 TITLE_SEPARATORS = [r"\|", "-"]
 HTML_TITLE_TEXT_RE_TEMPLATES = [
@@ -51,6 +55,44 @@ class OUModulesBackend:
             k: tuple(v) for k, v in cache_json.items()
         }
 
+    async def _try_cache(self, code) -> Optional[Result]:
+        if code not in self.cache:
+            logger.info(f"{code} not in cache")
+            return None
+        cached_result = self.cache[code]
+        title = cached_result[0]
+        url = cached_result[1] or await self._get_url_if_active(code)
+        return Result(code, title, url)
+
+    async def _try_url(self, code) -> Optional[Result]:
+        if active_url := await self._get_url_if_active(code):
+            async with httpx.AsyncClient() as client:
+                result = await client.get(active_url, allow_redirects=True)
+            if found_title := find_title_in_html(result.text):
+                logger.info(f"{code} found via {active_url}")
+                self.cache[code] = (found_title, active_url)
+                return Result(code, found_title, active_url)
+        logger.info(f"{code} can't be found via module URL")
+        return None
+
+    async def _try_ouda(self, code) -> Optional[Result]:
+        ouda_url = OUDA_URL_TEMPLATE.format(code)
+        try:
+            logger.info(f"Trying {ouda_url}")
+            async with httpx.AsyncClient() as client:
+                response = await client.get(ouda_url)
+            html = response.content.decode("utf-8")
+        except Exception:
+            logger.exception(f"Failed fetching {ouda_url}")
+            return None
+
+        if titles := MODULE_TITLE_OUDA_RE.findall(html):
+            logger.info(f"{code} found via OUDA")
+            self.cache[code] = (titles[0], None)
+            return Result(code, titles[0], None)
+        logger.info(f"{code} can't be found via {ouda_url}")
+        return None
+
     async def find_result_for_code(self, code: str) -> Optional[Result]:
         """
         Returns a module title for given code, if available.
@@ -61,41 +103,18 @@ class OUModulesBackend:
         code = code.upper()
 
         # 1. Try cached title:
-        if code in self.cache:
-            cached_result = self.cache[code]
-            title = cached_result[0].replace("!", "")
-            url = cached_result[1] or await self._get_url_if_active(code)
-            return Result(code, title, url)
+        if cached_result := await self._try_cache(code):
+            return cached_result
 
-        logger.info("{} not in cache".format(code))
-
-        # 2. Try URL (some active qualifications don't seem present in SPARQL
-        #             results, for example R51):
-        active_url = await self._get_url_if_active(code)
-        if active_url:
-            async with httpx.AsyncClient() as client:
-                html = (
-                    await client.get(active_url, allow_redirects=True)
-                ).text
-            found_title = find_title_in_html(html)
-            if found_title:
-                self.cache[code] = (found_title, active_url)
-                return Result(code, found_title, active_url)
+        # 2. Try scraping URL with HTML description
+        #    (some results used to be missing from SPARQL results):
+        if result := await self._try_url(code):
+            return result
 
         # 3. Try OUDA for old modules:
-        try:
-            url_template = (
-                "http://www.open.ac.uk/library/digital-archive/module/xcri:{}"
-            )
-            async with httpx.AsyncClient() as client:
-                response = await client.get(url_template.format(code))
-            html = response.content.decode("utf-8")
-        except Exception:
-            return None
-        titles = MODULE_TITLE_OUDA_RE.findall(html)
-        if titles:
-            self.cache[code] = (titles[0], active_url)
-            return Result(code, titles[0], active_url)
+        if result := await self._try_ouda(code):
+            return result
+
         return None
 
     async def _is_active_url(self, url: str, code: str) -> bool:
