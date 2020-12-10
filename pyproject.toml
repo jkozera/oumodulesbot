@@ -8,7 +8,7 @@ description = ""
 authors = ["Jerzy Kozera <jerzy.kozera@gmail.com>"]
 
 [tool.poetry.dependencies]
-"discord.py" = "^1.4.1"
+"discord.py" = "^1.5.1"
 python = "^3.8"
 pylru = "^1.2.0"
 httpx = "^0.14"
