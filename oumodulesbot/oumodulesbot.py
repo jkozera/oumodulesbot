@@ -21,7 +21,7 @@ class OUModulesBot(discord.Client):
     MODULES_COUNT_LIMIT = 5
 
     def __init__(self, *args, **kwargs):
-        kwargs['intents'] = discord.Intents(messages=True)
+        kwargs["intents"] = discord.Intents(messages=True)
         super().__init__(*args, **kwargs)
         self.backend = OUModulesBackend()
 
