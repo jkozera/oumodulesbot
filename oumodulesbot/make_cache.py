@@ -23,13 +23,13 @@ def dump_readable_json(dictionary):
 
 
 async def main():
-    reqults_xcri = await query_xcri()
+    results_xcri = await query_xcri()
     results_oldcourses = await query_oldcourses()
     oldcache = json.load(open("cache.json"))
 
     seen_codes = set()
 
-    for c in results_oldcourses + reqults_xcri:
+    for c in results_oldcourses + results_xcri:
         code, title, url = c["id"], c["title"], c.get("url")
         seen_codes.add(code)
         if oldcache.get(code, ["", url])[1] != url:
