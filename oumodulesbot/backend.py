@@ -138,7 +138,10 @@ class OUModulesBackend:
         destination page URL includes the module code.
         """
         async with httpx.AsyncClient() as client:
-            response = await client.head(url, allow_redirects=True)
+            try:
+                response = await client.head(url, allow_redirects=True, timeout=3)
+            except httpx.ReadTimeout:
+                return False
             correct_redirect = code.lower() in str(response.url).lower()
             return correct_redirect and response.status_code == 200
 
