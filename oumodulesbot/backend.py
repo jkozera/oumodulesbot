@@ -139,7 +139,11 @@ class OUModulesBackend:
         """
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.head(url, allow_redirects=True, timeout=3)
+                response = await client.head(
+                    url,
+                    allow_redirects=True,
+                    timeout=3,
+                )
             except httpx.ReadTimeout:
                 return False
             correct_redirect = code.lower() in str(response.url).lower()
