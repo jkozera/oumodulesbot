@@ -111,7 +111,7 @@ class OUModulesBot(discord.Client):
                 content=content, embed=embed if len(results) > 1 else None
             )
         else:
-            replies_cache[message.id] = await message.channel.send(
+            replies_cache[message.id] = await message.reply(
                 content, embed=embed if len(results) > 1 else None
             )
 
