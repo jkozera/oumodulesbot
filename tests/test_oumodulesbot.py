@@ -58,8 +58,8 @@ E2E_EXAMPLES = [
 def create_mock_message(contents, send_result="foo", id_override=None):
     message = mock.Mock(spec=discord.Message)
     message.content = contents
-    message.channel.send = mock.AsyncMock()
-    message.channel.send.return_value = send_result
+    message.reply = mock.AsyncMock()
+    message.reply.return_value = send_result
     message.id = id_override or contents
     return message
 
@@ -83,7 +83,9 @@ async def process_message(bot, message, result):
                 url = f"http://www.open.ac.uk/courses/modules/{code}"
             else:
                 url = QUALIFICATION_URL_TPL.format(code=code)
-            head_mock.assert_called_once_with(url, allow_redirects=True)
+            head_mock.assert_called_once_with(
+                url, allow_redirects=True, timeout=3
+            )
 
 
 @pytest.mark.parametrize("module", E2E_EXAMPLES)
@@ -96,7 +98,7 @@ async def test_end_to_end_create(module):
     bot = OUModulesBot()
     message = create_mock_message(f"foo !{module.code}")
     await process_message(bot, message, module)
-    message.channel.send.assert_called_once_with(module.result, embed=None)
+    message.reply.assert_called_once_with(module.result, embed=None)
 
 
 async def test_end_to_end_update():
@@ -153,9 +155,7 @@ async def test_end_to_end_missing_module(get_mock):
 
     # ensure module name is returned to Discord:
     await process_message(bot, message, fake_module)
-    message.channel.send.assert_called_once_with(
-        fake_module.result, embed=None
-    )
+    message.reply.assert_called_once_with(fake_module.result, embed=None)
 
     # ensure httpx was called with appropriate URL:
     get_mock.assert_called_with(
