@@ -1,9 +1,9 @@
 FROM python:3.9
 
-ADD requirements.txt .
-RUN pip install -r requirements.txt
-
 ADD oumodulesbot /oumodulesbot
-ADD cache.json /
+ADD poetry.lock pyproject.toml cache.json /
 
-CMD [ "python", "-m", "oumodulesbot.oumodulesbot" ]
+RUN pip install poetry==1.1.10
+RUN cd /oumodulesbot && poetry install
+
+CMD [ "poetry", "run", "python", "-m", "oumodulesbot.oumodulesbot" ]
