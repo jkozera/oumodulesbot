@@ -30,18 +30,21 @@ def get_module_level(module_code: str) -> int:
     raise ValueError(f"Invalid module code: {module_code}")
 
 
-def get_module_url(module_code: str) -> str:
+def get_module_urls(module_code: str) -> Iterable[str]:
     if get_module_level(module_code) == 0:
-        template = "http://www.open.ac.uk/courses/short-courses/{}"
+        templates = ["http://www.open.ac.uk/courses/short-courses/{}"]
     elif get_module_level(module_code) == 8:
-        template = "http://www.open.ac.uk/postgraduate/modules/{}"
+        templates = ["http://www.open.ac.uk/postgraduate/modules/{}"]
     else:
-        template = "http://www.open.ac.uk/courses/modules/{}"
-    return template.format(module_code.lower())
+        templates = [
+            "http://www.open.ac.uk/courses/qualifications/details/{}",
+            "http://www.open.ac.uk/courses/modules/{}",
+        ]
+    return [template.format(module_code.lower()) for template in templates]
 
 
 def get_possible_urls_from_code(code: str) -> Iterable[str]:
     code = code.lower()
     if QUALIFICATION_CODE_RE.match(code):
         return get_possible_qualification_urls(code)
-    return [get_module_url(code)]
+    return get_module_urls(code)

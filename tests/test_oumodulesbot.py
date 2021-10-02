@@ -80,11 +80,19 @@ async def process_message(bot, message, result):
             # inactive results are double-checked with http to provide a link
             # in case the inactive cache.json status is no longer valid:
             if "qualification" not in result.result:
-                url = f"http://www.open.ac.uk/courses/modules/{code}"
+                prefix = "http://www.open.ac.uk/courses"
+                urls = [
+                    f"{prefix}/qualifications/details/{code}",
+                    f"{prefix}/modules/{code}",
+                ]
             else:
-                url = QUALIFICATION_URL_TPL.format(code=code)
-            head_mock.assert_called_once_with(
-                url, allow_redirects=True, timeout=3
+                urls = [QUALIFICATION_URL_TPL.format(code=code)]
+            head_mock.assert_has_calls(
+                [
+                    mock.call(url, allow_redirects=True, timeout=3)
+                    for url in urls
+                ],
+                any_order=True,
             )
 
 

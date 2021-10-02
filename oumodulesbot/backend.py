@@ -22,17 +22,16 @@ OUDA_URL_TEMPLATE = (
 )
 
 
-TITLE_SEPARATORS = [r"\|", "-"]
-HTML_TITLE_TEXT_RE_TEMPLATES = [
+TITLE_SEPARATOR = r"[^\s]"
+HTML_TITLE_TEXT_RE_TEMPLATE = (
     fr"{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
     # the trailing '.*' allows ' Course' after 'Open University':
-    fr"\s*{sep}\s*(.+?)\s*{sep}\s*Open University.*"
-    for sep in TITLE_SEPARATORS
-]
-HTML_TITLE_TAG_RES = [
-    re.compile(fr"<title>\s*{template}\s*</title>")
-    for template in HTML_TITLE_TEXT_RE_TEMPLATES
-]
+    fr"\s*{TITLE_SEPARATOR}\s*(.+?)\s*{TITLE_SEPARATOR}\s*Open University.*"
+)
+HTML_TITLE_TAG_RE = re.compile(
+    fr"<title>\s*{HTML_TITLE_TEXT_RE_TEMPLATE}\s*</title>",
+)
+
 
 logger = logging.getLogger(__name__)
 
@@ -40,10 +39,8 @@ CacheItem = Tuple[str, Optional[str]]  # title, url
 
 
 def find_title_in_html(html: str) -> Optional[str]:
-    for tag_re in HTML_TITLE_TAG_RES:
-        found = tag_re.search(html)
-        if found:
-            return found.groups()[0]
+    if found := HTML_TITLE_TAG_RE.search(html):
+        return found.groups()[0]
     return None
 
 
