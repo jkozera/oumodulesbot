@@ -8,10 +8,10 @@ description = ""
 authors = ["Jerzy Kozera <jerzy.kozera@gmail.com>"]
 
 [tool.poetry.dependencies]
-"discord.py" = "^1.6.0"
+"discord.py" = "^1.7.3"
 python = "^3.8"
 pylru = "^1.2.0"
-httpx = "^0.14"
+httpx = "^0.19"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

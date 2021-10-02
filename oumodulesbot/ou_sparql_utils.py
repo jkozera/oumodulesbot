@@ -46,12 +46,12 @@ logger = logging.getLogger(__name__)
 async def query_data_ac_uk(query, offset, limit):
     q = {"query": "{} offset {} limit {}".format(query, offset, limit)}
     async with httpx.AsyncClient() as client:
-        http_result = client.get(
+        http_result = await client.get(
             f"http://data.open.ac.uk/sparql?{urllib.parse.urlencode(q)}",
             headers={"Accept": "application/sparql-results+json"},
         )
     retval = []
-    for result in (await http_result).json()["results"]["bindings"]:
+    for result in http_result.json()["results"]["bindings"]:
         item = {}
         for k in result:
             item[k] = result[k]["value"]
