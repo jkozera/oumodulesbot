@@ -24,12 +24,12 @@ OUDA_URL_TEMPLATE = (
 
 TITLE_SEPARATOR = r"[^\s]"
 HTML_TITLE_TEXT_RE_TEMPLATE = (
-    fr"{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
+    rf"{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
     # the trailing '.*' allows ' Course' after 'Open University':
-    fr"\s*{TITLE_SEPARATOR}\s*(.+?)\s*{TITLE_SEPARATOR}\s*Open University.*"
+    rf"\s*{TITLE_SEPARATOR}\s*(.+?)\s*{TITLE_SEPARATOR}\s*Open University.*"
 )
 HTML_TITLE_TAG_RE = re.compile(
-    fr"<title>\s*{HTML_TITLE_TEXT_RE_TEMPLATE}\s*</title>",
+    rf"<title>\s*{HTML_TITLE_TEXT_RE_TEMPLATE}\s*</title>",
 )
 
 
