@@ -89,7 +89,7 @@ async def process_message(bot, message, result):
                 urls = [QUALIFICATION_URL_TPL.format(code=code)]
             head_mock.assert_has_calls(
                 [
-                    mock.call(url, allow_redirects=True, timeout=3)
+                    mock.call(url, follow_redirects=True, timeout=3)
                     for url in urls
                 ],
                 any_order=True,

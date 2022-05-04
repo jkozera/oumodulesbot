@@ -9,17 +9,17 @@ authors = ["Jerzy Kozera <jerzy.kozera@gmail.com>"]
 
 [tool.poetry.dependencies]
 "discord.py" = "^1.7.3"
-python = "^3.8"
-pylru = "^1.2.0"
-httpx = "^0.19"
+python = "^3.10"
+pylru = "^1.2.1"
+httpx = "^0.22"
 
 [tool.poetry.dev-dependencies]
-black = "^20.8b1"
-flake8 = "^3.8"
-pytest = "^6"
-pytest-asyncio = "^0.14"
-mypy = "^0.782"
-isort = "^5.5"
+black = "^22.3"
+flake8 = "^4.0"
+pytest = "^7"
+pytest-asyncio = "^0.18"
+mypy = "^0.950"
+isort = "^5.10"
 
 [build-system]
 requires = ["poetry>=1.0"]
