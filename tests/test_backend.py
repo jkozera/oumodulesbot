@@ -7,13 +7,12 @@ from oumodulesbot import backend
     "html, expected_name",
     [
         (
-            "<title>\n	 MST125 | Essential Mathematics 2 "
-            "| Open University\n</title>",
+            "<title>\n	 MST125 | Essential Mathematics 2\n</title>",
             "Essential Mathematics 2",
         ),
         (
-            "<title>\nD241 - Exploring mental health and counselling "
-            "- Open University Course\n</title>",
+            "<title>\nD241 - Exploring mental health and counselling"
+            " | Open University</title>",
             "Exploring mental health and counselling",
         ),
     ],

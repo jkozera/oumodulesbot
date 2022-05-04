@@ -96,7 +96,7 @@ def is_really_active(url, code, retries=2, retry_num=0):
     print(f"Trying {url} -> ", end=" ")
     time.sleep(0.1)  # lame rate limiting
     try:
-        result = httpx.head(url, allow_redirects=True)
+        result = httpx.head(url, follow_redirects=True)
     except Exception as e:
         print("failed (%s)" % e, end=" ")
         retry_num += 1
