@@ -69,7 +69,7 @@ class OUModulesBackend:
     async def _try_url(self, code) -> Optional[Result]:
         if active_url := await self._get_url_if_active(code):
             async with httpx.AsyncClient() as client:
-                result = await client.get(active_url, allow_redirects=True)
+                result = await client.get(active_url, follow_redirects=True)
             if found_title := find_title_in_html(result.text):
                 logger.info(f"{code} found via {active_url}")
                 return Result(code, found_title, active_url)
@@ -138,7 +138,7 @@ class OUModulesBackend:
             try:
                 response = await client.head(
                     url,
-                    allow_redirects=True,
+                    follow_redirects=True,
                     timeout=3,
                 )
             except httpx.ReadTimeout:
