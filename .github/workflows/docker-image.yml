@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
 
@@ -19,4 +17,3 @@ jobs:
     - name: Push the image to registry
       run: docker login -u ${{ secrets.CI_REGISTRY_USER }} -p ${{ secrets.CI_REGISTRY_PASSWORD }} &&
            docker push ${{ secrets.CI_REGISTRY_IMAGE }}:latest
-      if: ${{ github.event_name == 'push' }}
