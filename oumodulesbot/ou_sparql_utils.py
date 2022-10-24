@@ -20,7 +20,7 @@ FROM <http://data.open.ac.uk/context/xcri> WHERE {{
   ?course dc:title ?title .
   ?course mlo:url ?url .
   ?course rdf:type ?type
-  FILTER ( STRSTARTS ( STR ( ?type ), "http://data.open.ac.uk/ontology/" ) )
+  FILTER (STRSTARTS ( STR ( ?type ), "http://data.open.ac.uk/ontology/" ))
   {addfilter}
 }}
 """
@@ -36,7 +36,7 @@ FROM <http://data.open.ac.uk/context/qualification> WHERE {{
   ?qualification vocab:name ?title .
   ?qualification mlo:url ?url .
   ?qualification rdf:type ?type
-  FILTER ( STRSTARTS ( STR ( ?type ), "http://data.open.ac.uk/saou/ontology" ) )
+  FILTER (STRSTARTS ( STR ( ?type ), "http://data.open.ac.uk/saou/ontology" ))
   {addfilter}
 }}
 """
