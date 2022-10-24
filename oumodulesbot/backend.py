@@ -24,7 +24,7 @@ OUDA_URL_TEMPLATE = (
 
 TITLE_SEPARATOR = r"[^\s]"
 MAX_MODULE_NAME_LEN = 100
-MODULE_NAME_RE = rf"[A-Z][a-zA-Z0-9,.:; ]{{1,{MAX_MODULE_NAME_LEN}}}?"
+MODULE_NAME_RE = rf"[A-Z][a-zA-Z0-9,.:;\(\) ]{{1,{MAX_MODULE_NAME_LEN}}}?"
 HTML_TITLE_TEXT_RE_TEMPLATE = (
     rf"{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
     # the trailing '.*' allows ' Course' after 'Open University':
