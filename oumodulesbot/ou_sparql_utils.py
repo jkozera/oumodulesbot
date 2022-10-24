@@ -25,6 +25,22 @@ FROM <http://data.open.ac.uk/context/xcri> WHERE {{
 }}
 """
 
+XCRI_QUALIFICATIONS_QUERY = """
+PREFIX mlo: <http://purl.org/net/mlo/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX vocab: <http://purl.org/vocab/aiiso/schema#>
+
+SELECT ?id ?title ?url ?type
+FROM <http://data.open.ac.uk/context/qualification> WHERE {{
+  ?qualification vocab:code ?id .
+  ?qualification vocab:name ?title .
+  ?qualification mlo:url ?url .
+  ?qualification rdf:type ?type
+  FILTER ( STRSTARTS ( STR ( ?type ), "http://data.open.ac.uk/saou/ontology" ) )
+  {addfilter}
+}}
+"""
+
 OLDCOURSE_QUERY = """
 PREFIX aiiso: <http://purl.org/vocab/aiiso/schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
@@ -61,7 +77,11 @@ async def query_data_ac_uk(query, offset, limit):
 
 async def query_xcri(limit=3000, **format_kwargs):
     format_ = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
-    return await query_data_ac_uk(XCRI_QUERY.format(**format_), 0, limit)
+    courses = await query_data_ac_uk(XCRI_QUERY.format(**format_), 0, limit)
+    qualifications = await query_data_ac_uk(
+        XCRI_QUALIFICATIONS_QUERY.format(**format_), 0, limit,
+    )
+    return courses + qualifications
 
 
 async def query_oldcourses(limit=3000, **format_kwargs):
