@@ -79,7 +79,9 @@ async def query_xcri(limit=3000, **format_kwargs):
     format_ = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
     courses = await query_data_ac_uk(XCRI_QUERY.format(**format_), 0, limit)
     qualifications = await query_data_ac_uk(
-        XCRI_QUALIFICATIONS_QUERY.format(**format_), 0, limit,
+        XCRI_QUALIFICATIONS_QUERY.format(**format_),
+        0,
+        limit,
     )
     return courses + qualifications
 
