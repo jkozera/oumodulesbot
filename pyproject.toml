@@ -11,7 +11,7 @@ authors = ["Jerzy Kozera <jerzy.kozera@gmail.com>"]
 "discord.py" = "^2.2.3"
 python = "^3.11"
 pylru = "^1.2.1"
-httpx = "^0.23"
+httpx = "^0.24"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3"
