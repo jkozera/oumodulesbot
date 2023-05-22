@@ -16,7 +16,6 @@ replies_cache = pylru.lrucache(1000)
 
 
 class OUModulesBot(discord.Client):
-
     MENTION_RE = re.compile(r"!" + MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE)
     MODULES_COUNT_LIMIT = 5
 
