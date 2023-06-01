@@ -20,14 +20,18 @@ class OUModulesBot(discord.Client):
     MODULES_COUNT_LIMIT = 5
 
     def __init__(self, *args, **kwargs):
-        kwargs["intents"] = discord.Intents(messages=True, guilds=True)
+        kwargs["intents"] = discord.Intents(
+            messages=True,
+            message_content=True,
+            guilds=True,
+        )
         super().__init__(*args, **kwargs)
         self.backend = OUModulesBackend()
 
     async def process_mentions(self, message: discord.Message) -> None:
         """
         Process module code mentions from given `message`, and reply with
-        thieir names/URLs if any were found.
+        their names/URLs if any were found.
         """
         results: List[Result] = []
         any_found = False
