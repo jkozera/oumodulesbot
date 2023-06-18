@@ -47,6 +47,11 @@ def find_title_in_html(html: str) -> Optional[str]:
     return None
 
 
+def make_client():
+    headers = {'User-Agent': 'ou-modules-bot / 0.0.0 (https://modules-bot.ou-stem.club/)'}
+    return httpx.AsyncClient(headers=headers)
+
+
 class OUModulesBackend:
     def __init__(self):
         with open("cache.json", "r") as f:
@@ -71,7 +76,7 @@ class OUModulesBackend:
 
     async def _try_url(self, code) -> Optional[Result]:
         if active_url := await self._get_url_if_active(code):
-            async with httpx.AsyncClient() as client:
+            async with make_client() as client:
                 result = await client.get(active_url, follow_redirects=True)
             if found_title := find_title_in_html(result.text):
                 logger.info(f"{code} found via {active_url}")
@@ -83,7 +88,7 @@ class OUModulesBackend:
         ouda_url = OUDA_URL_TEMPLATE.format(code)
         try:
             logger.info(f"Trying {ouda_url}")
-            async with httpx.AsyncClient() as client:
+            async with make_client() as client:
                 response = await client.get(ouda_url)
             html = response.content.decode("utf-8")
         except Exception:
@@ -137,7 +142,7 @@ class OUModulesBackend:
         Thus a compromise is used here by allowing redirects, but only if the
         destination page URL includes the module code.
         """
-        async with httpx.AsyncClient() as client:
+        async with make_client() as client:
             try:
                 response = await client.head(
                     url,
