@@ -11,8 +11,10 @@ from oumodulesbot import backend
             "Essential Mathematics 2",
         ),
         (
-            "<title>\nD241 - Exploring mental health and counselling"
-            " | Open University</title>",
+            (
+                "<title>\nD241 - Exploring mental health and counselling"
+                " | Open University</title>"
+            ),
             "Exploring mental health and counselling",
         ),
     ],

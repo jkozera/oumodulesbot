@@ -49,7 +49,9 @@ def find_title_in_html(html: str) -> Optional[str]:
 
 def make_client():
     headers = {
-        "User-Agent": "ou-modules-bot / 0.0.0 (https://modules-bot.ou-stem.club/)"
+        "User-Agent": (
+            "ou-modules-bot / 0.0.0 (https://modules-bot.ou-stem.club/)"
+        )
     }
     return httpx.AsyncClient(headers=headers)
 

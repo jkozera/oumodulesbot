@@ -32,7 +32,7 @@ E2E_EXAMPLES = [
     ModuleExample(
         "A123",
         True,
-        ("A123: Mocked active module (<url1>)"),
+        "A123: Mocked active module (<url1>)",
     ),
     ModuleExample("B321", False, "B321: Mocked inactive module"),
     ModuleExample(
@@ -45,12 +45,12 @@ E2E_EXAMPLES = [
     ModuleExample(
         "A012",
         True,
-        ("A012: Mocked active short course (<url2>)"),
+        "A012: Mocked active short course (<url2>)",
     ),
     ModuleExample(
         "A888",
         True,
-        ("A888: Mocked active postgrad module (<url3>)"),
+        "A888: Mocked active postgrad module (<url3>)",
     ),
 ]
 
