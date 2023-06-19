@@ -106,7 +106,7 @@ async def test_end_to_end_create(module):
     bot = OUModulesBot()
     message = create_mock_message(f"foo !{module.code}")
     await process_message(bot, message, module)
-    message.reply.assert_called_once_with(module.result, embed=None)
+    message.reply.assert_called_once_with(module.result, embeds=[])
 
 
 async def test_end_to_end_update():
@@ -138,7 +138,7 @@ async def test_end_to_end_update():
         await process_message(bot, update_message, update)
         # verify that the bot's response is updated:
         result_message.edit.assert_called_once_with(
-            content=update.result, embed=None
+            content=update.result, embeds=[]
         )
         result_message.edit.reset_mock()
 
@@ -163,7 +163,7 @@ async def test_end_to_end_missing_module(get_mock):
 
     # ensure module name is returned to Discord:
     await process_message(bot, message, fake_module)
-    message.reply.assert_called_once_with(fake_module.result, embed=None)
+    message.reply.assert_called_once_with(fake_module.result, embeds=[])
 
     # ensure httpx was called with appropriate URL:
     get_mock.assert_called_with(

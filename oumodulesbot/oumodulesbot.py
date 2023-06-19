@@ -109,13 +109,12 @@ class OUModulesBot(discord.Client):
             # that `content` is set below
             return
 
+        embeds = [embed] if len(results) > 1 else []
         if modify_message:
-            await modify_message.edit(
-                content=content, embed=embed if len(results) > 1 else None
-            )
+            await modify_message.edit(content=content, embeds=embeds)
         else:
             replies_cache[message.id] = await message.reply(
-                content, embed=embed if len(results) > 1 else None
+                content, embeds=embeds
             )
 
     async def on_message(self, message: discord.Message) -> None:
