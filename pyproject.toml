@@ -14,7 +14,7 @@ python = "^3.11"
 pylru = "^1.2.1"
 httpx = "^0.24"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^23.3"
 flake8 = "^6.0"
 pytest = "^7"
