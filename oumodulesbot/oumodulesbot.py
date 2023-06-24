@@ -1,3 +1,5 @@
+import contextlib
+import datetime
 import json
 import logging
 import os
@@ -6,6 +8,7 @@ from typing import Iterable, List, Sequence
 
 import discord
 import pylru
+from google.cloud import firestore  # type: ignore
 
 from .backend import OUModulesBackend, Result
 from .ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
@@ -13,6 +16,46 @@ from .ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
 logger = logging.getLogger(__name__)
 
 replies_cache = pylru.lrucache(1000)
+
+
+if os.environ.get("DISABLE_FIRESTORE") != "1":
+    firestore_db = firestore.AsyncClient(project="ou-modules-bot")
+
+
+@firestore.async_transactional
+async def _db_claim_message(transaction, message_id, value) -> bool:
+    doc_ref = firestore_db.collection("message_ids").document(str(message_id))
+    snapshot = await doc_ref.get(transaction=transaction)
+    claimed = snapshot.exists and not snapshot.get("can_retry")
+    if not claimed:
+        data = {"claimed": value, "can_retry": False}
+        if snapshot.exists:
+            transaction.update(doc_ref, data)
+        else:
+            transaction.create(doc_ref, data)
+    return not claimed
+
+
+async def _db_retry_message(message_id) -> None:
+    doc_ref = firestore_db.collection("message_ids").document(str(message_id))
+    await doc_ref.update(doc_ref, {"can_retry": True})
+
+
+@contextlib.asynccontextmanager
+async def claim_message(message_id):
+    if os.environ.get("DISABLE_FIRESTORE") == "1":
+        yield True
+        return
+    if await _db_claim_message(
+        firestore_db.transaction(), message_id, datetime.datetime.now()
+    ):
+        try:
+            yield True
+        except Exception:
+            # Nothing has been posted yet.
+            await _db_retry_message(firestore_db.transaction(), message_id)
+    else:
+        yield False
 
 
 class OUModulesBot(discord.Client):
@@ -34,17 +77,24 @@ class OUModulesBot(discord.Client):
         their names/URLs if any were found.
         """
         results: List[Result] = []
+        matches = list(
+            self.MENTION_RE.findall(message.content)[
+                : self.MODULES_COUNT_LIMIT
+            ]
+        )
         any_found = False
-        for code in self.MENTION_RE.findall(message.content)[
-            : self.MODULES_COUNT_LIMIT
-        ]:
-            code = code[1:].upper()
-            result = await self.backend.find_result_for_code(code)
-            if result:
-                any_found = True
-                results.append(result)
-            else:
-                results.append(Result(code, "not found", None))
+        if matches:
+            async with claim_message(message.id) as claimed:
+                if not claimed:
+                    return
+                for code in matches:
+                    code = code[1:].upper()
+                    result = await self.backend.find_result_for_code(code)
+                    if result:
+                        any_found = True
+                        results.append(result)
+                    else:
+                        results.append(Result(code, "not found", None))
         if any_found:
             # don't spam unless we're sure we at least found some results
             await self.post_results(message, results)
