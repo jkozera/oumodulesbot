@@ -16,7 +16,7 @@ httpx = "^0.24"
 google-cloud-firestore = "^2.11.1"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3"
+black = "^23.7"
 flake8 = "^6.0"
 pytest = "^7"
 pytest-asyncio = "^0.21"
