@@ -53,7 +53,7 @@ async def claim_message(message_id):
             yield True
         except Exception:
             # Nothing has been posted yet.
-            await _db_retry_message(firestore_db.transaction(), message_id)
+            await _db_retry_message(message_id)
     else:
         yield False
 
