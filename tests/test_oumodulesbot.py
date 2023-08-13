@@ -148,26 +148,35 @@ async def test_end_to_end_missing_module(get_mock):
     bot = OUModulesBot()
     fake_module = ModuleExample("XYZ999", False, "XYZ999: Some Random Module")
     message = create_mock_message(f"foo !{fake_module.code}")
+    expected_url = (
+        "http://www.open.ac.uk/library/digital-archive/module/"
+        f"xcri:{fake_module.code}"
+    )
 
     # return matching data from httpx:
-    # 1. Empty SPARQL:
-    sparql_json = {"results": {"bindings": []}}
-    get_mock.return_value.json = lambda: sparql_json
-
-    # 2. OUDA HTML:
-    get_mock.return_value.content = (
-        "not really html but matches the regex:"
-        f"<title>{fake_module.code} Some Random Module"
-        " - Open University Digital Archive</title>"
-    ).encode()
+    get_mock.side_effect = lambda url, **kw: {
+        expected_url: mock.Mock(
+            # OUDA HTML:
+            content=(
+                "not really html but matches the regex:"
+                f"<title>{fake_module.code} Some Random Module"
+                " - Open University Digital Archive</title>"
+            ).encode(),
+        )
+    }.get(
+        url,
+        mock.Mock(
+            # Empty SPARQL:
+            json=lambda: {"results": {"bindings": []}},
+        ),
+    )
 
     # ensure module name is returned to Discord:
     await process_message(bot, message, fake_module)
     message.reply.assert_called_once_with(fake_module.result, embeds=[])
 
     # ensure httpx was called with appropriate URL:
-    get_mock.assert_called_with(
+    get_mock.assert_any_call(
         # ignore SPARQL calls
-        "http://www.open.ac.uk/library/digital-archive/module/"
-        f"xcri:{fake_module.code}"
+        expected_url
     )

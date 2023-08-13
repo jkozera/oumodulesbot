@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import re
@@ -127,20 +128,24 @@ class OUModulesBackend:
         # 1. Try cached title:
         if cached_result := await self._try_cache(code):
             return cached_result
-        # 2. Try SPARQL queries:
-        elif sparql_result := await find_module_or_qualification(code):
-            result = sparql_result
-        # 3. Try scraping URL with HTML description
-        #    (some results used to be missing from SPARQL results):
-        elif url_scraping_result := await self._try_url(code):
-            result = url_scraping_result
-        # 4. Try OUDA for old modules:
-        elif ouda_result := await self._try_ouda(code):
-            result = ouda_result
-        else:
-            return None
 
-        self.cache[code] = (result.title, result.url)
+        query_attempts = [
+            # 2. Try SPARQL queries:
+            find_module_or_qualification(code),
+            # 3. Try scraping URL with HTML description
+            #    (some results used to be missing from SPARQL results):
+            self._try_url(code),
+            # 4. Try OUDA for old modules:
+            self._try_ouda(code),
+        ]
+
+        for result in await asyncio.gather(*query_attempts):
+            if isinstance(result, Exception):
+                continue
+            if result:
+                self.cache[code] = (result.title, result.url)
+                break
+
         return result
 
     async def _is_active_url(self, url: str, code: str) -> bool:
