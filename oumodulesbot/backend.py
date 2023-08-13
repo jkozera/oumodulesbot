@@ -149,6 +149,8 @@ class OUModulesBackend:
                     if isinstance(result, Exception):
                         continue
                     if result:
+                        for task in unfinished:
+                            task.cancel()
                         self.cache[code] = (result.title, result.url)
                         return result
 
