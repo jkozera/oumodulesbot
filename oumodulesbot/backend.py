@@ -129,22 +129,28 @@ class OUModulesBackend:
         if cached_result := await self._try_cache(code):
             return cached_result
 
-        query_attempts = [
-            # 2. Try SPARQL queries:
-            find_module_or_qualification(code),
-            # 3. Try scraping URL with HTML description
-            #    (some results used to be missing from SPARQL results):
-            self._try_url(code),
-            # 4. Try OUDA for old modules:
-            self._try_ouda(code),
-        ]
+        async with asyncio.TaskGroup() as tg:
+            unfinished = [
+                # 2. Try SPARQL queries:
+                tg.create_task(find_module_or_qualification(code)),
+                # 3. Try scraping URL with HTML description
+                #    (some results used to be missing from SPARQL results):
+                tg.create_task(self._try_url(code)),
+                # 4. Try OUDA for old modules:
+                tg.create_task(self._try_ouda(code)),
+            ]
 
-        for result in await asyncio.gather(*query_attempts):
-            if isinstance(result, Exception):
-                continue
-            if result:
-                self.cache[code] = (result.title, result.url)
-                break
+            while unfinished:
+                finished, unfinished = await asyncio.wait(
+                    unfinished, return_when=asyncio.FIRST_COMPLETED
+                )
+                for task in finished:
+                    result = task.result()
+                    if isinstance(result, Exception):
+                        continue
+                    if result:
+                        self.cache[code] = (result.title, result.url)
+                        return result
 
         return result
 
