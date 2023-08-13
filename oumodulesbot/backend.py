@@ -129,7 +129,7 @@ class OUModulesBackend:
         if cached_result := await self._try_cache(code):
             return cached_result
 
-        async with asyncio.TaskGroup() as tg:
+        async with asyncio.TaskGroup() as tg:  # type: ignore
             unfinished = [
                 # 2. Try SPARQL queries:
                 tg.create_task(find_module_or_qualification(code)),
