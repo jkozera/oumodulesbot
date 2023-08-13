@@ -86,6 +86,7 @@ class OUModulesBackend:
                         active_url, follow_redirects=True
                     )
                 except httpx.ReadTimeout:
+                    logger.warning("www.open.ac.uk timeout")
                     return None
             if found_title := find_title_in_html(result.text):
                 logger.info(f"{code} found via {active_url}")
@@ -101,6 +102,7 @@ class OUModulesBackend:
                 try:
                     response = await client.get(ouda_url)
                 except httpx.ReadTimeout:
+                    logger.warning("OUDA timeout")
                     return None
             html = response.content.decode("utf-8")
         except Exception:
@@ -162,6 +164,7 @@ class OUModulesBackend:
                     timeout=3,
                 )
             except httpx.ReadTimeout:
+                logger.warning("_is_active_url timeout")
                 return False
             correct_redirect = code.lower() in str(response.url).lower()
             return correct_redirect and response.status_code == 200
