@@ -59,7 +59,7 @@ QUERY_FORMAT_DEFAULTS = {"addfilter": ""}
 logger = logging.getLogger(__name__)
 
 
-async def query_data_ac_uk(query, offset, limit):
+async def query_data_open_ac_uk(query, offset, limit):
     q = {"query": "{} offset {} limit {}".format(query, offset, limit)}
     async with httpx.AsyncClient() as client:
         try:
@@ -81,8 +81,10 @@ async def query_data_ac_uk(query, offset, limit):
 
 async def query_xcri(limit=3000, **format_kwargs):
     format_ = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
-    courses = await query_data_ac_uk(XCRI_QUERY.format(**format_), 0, limit)
-    qualifications = await query_data_ac_uk(
+    courses = await query_data_open_ac_uk(
+        XCRI_QUERY.format(**format_), 0, limit
+    )
+    qualifications = await query_data_open_ac_uk(
         XCRI_QUALIFICATIONS_QUERY.format(**format_),
         0,
         limit,
@@ -92,7 +94,9 @@ async def query_xcri(limit=3000, **format_kwargs):
 
 async def query_oldcourses(limit=3000, **format_kwargs):
     format_ = dict(QUERY_FORMAT_DEFAULTS, **format_kwargs)
-    return await query_data_ac_uk(OLDCOURSE_QUERY.format(**format_), 0, limit)
+    return await query_data_open_ac_uk(
+        OLDCOURSE_QUERY.format(**format_), 0, limit
+    )
 
 
 async def find_module_or_qualification(code) -> Optional[Result]:
