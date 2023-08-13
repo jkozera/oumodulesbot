@@ -62,10 +62,14 @@ logger = logging.getLogger(__name__)
 async def query_data_ac_uk(query, offset, limit):
     q = {"query": "{} offset {} limit {}".format(query, offset, limit)}
     async with httpx.AsyncClient() as client:
-        http_result = await client.get(
-            f"http://data.open.ac.uk/sparql?{urllib.parse.urlencode(q)}",
-            headers={"Accept": "application/sparql-results+json"},
-        )
+        try:
+            http_result = await client.get(
+                f"http://data.open.ac.uk/sparql?{urllib.parse.urlencode(q)}",
+                headers={"Accept": "application/sparql-results+json"},
+            )
+        except httpx.ReadTimeout:
+            logger.warning("data.open.ac.uk timeout")
+            return []
     retval = []
     for result in http_result.json()["results"]["bindings"]:
         item = {}

@@ -81,7 +81,12 @@ class OUModulesBackend:
     async def _try_url(self, code) -> Optional[Result]:
         if active_url := await self._get_url_if_active(code):
             async with make_client() as client:
-                result = await client.get(active_url, follow_redirects=True)
+                try:
+                    result = await client.get(
+                        active_url, follow_redirects=True
+                    )
+                except httpx.ReadTimeout:
+                    return None
             if found_title := find_title_in_html(result.text):
                 logger.info(f"{code} found via {active_url}")
                 return Result(code, found_title, active_url)
@@ -93,7 +98,10 @@ class OUModulesBackend:
         try:
             logger.info(f"Trying {ouda_url}")
             async with make_client() as client:
-                response = await client.get(ouda_url)
+                try:
+                    response = await client.get(ouda_url)
+                except httpx.ReadTimeout:
+                    return None
             html = response.content.decode("utf-8")
         except Exception:
             logger.exception(f"Failed fetching {ouda_url}")
