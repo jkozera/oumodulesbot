@@ -521,13 +521,13 @@ grpc = ["grpcio (>=1.38.0,<2.0dev)"]
 
 [[package]]
 name = "google-cloud-firestore"
-version = "2.11.1"
+version = "2.12.0"
 description = "Google Cloud Firestore API client library"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "google-cloud-firestore-2.11.1.tar.gz", hash = "sha256:7f7dfa86567c8d66c66c8dba8bc5ef85677c8532b4206055a339413f8071525d"},
-    {file = "google_cloud_firestore-2.11.1-py2.py3-none-any.whl", hash = "sha256:833019175b6c82727da71e2db2fdea9bf203d0b8239c696492f7e2b24566bb3e"},
+    {file = "google-cloud-firestore-2.12.0.tar.gz", hash = "sha256:3eedc9b2238d8fdb6c2645da455de7ba8df0a9a1d253815932ac3a98c5eec9cd"},
+    {file = "google_cloud_firestore-2.12.0-py2.py3-none-any.whl", hash = "sha256:8dbdbe2fd96f2651076ec1a6eb9b68361ed7c560934a927f2ca55c8c5aadfb30"},
 ]
 
 [package.dependencies]
@@ -1231,4 +1231,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "68b8dfdb3628aa3fca64f8eedfe440d552e05d0e4037fa775013501d86e27b9e"
+content-hash = "d7a90ed12f9cb9472cf15426b713ed78fa6f92c3fa0710e3523239a5ea99dcf1"
