@@ -99,26 +99,30 @@ class OUModulesBot(discord.Client):
             # don't spam unless we're sure we at least found some results
             await self.post_results(message, results)
 
-    def format_result(self, result: Result, for_embed: bool = False) -> str:
+    @classmethod
+    def _format_result_url(cls, result: Result) -> str:
+        if result.url:
+            return f"[{result.title}]({result.url})"
+        else:
+            return f"{result.title}"
+
+    @classmethod
+    def _format_result(cls, result: Result, for_embed: bool) -> str:
+        text = cls._format_result_url(result)
+        if for_embed:
+            # add bullet points for embeds
+            return f" * {text} "
+        else:
+            return f"{result.code}: {text}"
+
+    @classmethod
+    def format_result(cls, result: Result, for_embed: bool = False) -> str:
         """
         Return a string describing a module ready for posting to Discord,
-        for given module `code` and `title`. Appends URL if available.
-
-        Uses more compact formatting if `for_embed` is True, which should
-        be used if multiple modules are presented as part of an embed.
+        for given module `code` and `title`. Adds URL link if available.
         """
-        fmt = " * {} " if for_embed else "{}"
-        fmt_link = " * [{}]({}) " if for_embed else "{} (<{}>)"
-        if result.url:
-            text = fmt_link.format(result.title, result.url)
-        else:
-            text = fmt.format(result.title)
-
-        # remove '!'s just in case, to avoid infinite circular bot invokation
-        if for_embed:
-            return text.replace("!", "")
-        else:
-            return "{}: {}".format(result.code, text).replace("!", "")
+        # remove '!'s just in case, to avoid infinite circular bot invocation
+        return cls._format_result(result, for_embed).replace("!", "")
 
     def embed_results(
         self, embed: discord.Embed, results: Iterable[Result]

@@ -17,9 +17,9 @@ QUALIFICATION_URL_TPL = "http://www.open.ac.uk/courses/qualifications/{code}"
 def mock_cache(monkeypatch):
     def mock_load(f):
         return {
-            "A123": ["Mocked active module", "url1"],
-            "A012": ["Mocked active short course", "url2"],
-            "A888": ["Mocked active postgrad module", "url3"],
+            "A123": ["Mocked active module", "fake_url1"],
+            "A012": ["Mocked active short course", "fake_url2"],
+            "A888": ["Mocked active postgrad module", "fake_url3"],
             "B321": ["Mocked inactive module", None],
             "B31": ["Mocked inactive-actually-active qualification", None],
         }
@@ -32,25 +32,25 @@ E2E_EXAMPLES = [
     ModuleExample(
         "A123",
         True,
-        "A123: Mocked active module (<url1>)",
+        "A123: [Mocked active module](fake_url1)",
     ),
     ModuleExample("B321", False, "B321: Mocked inactive module"),
     ModuleExample(
         "B31",
         False,
-        "B31: Mocked inactive-actually-active qualification (<{url}>)".format(
+        "B31: [Mocked inactive-actually-active qualification]({url})".format(
             url=QUALIFICATION_URL_TPL.format(code="b31"),
         ),
     ),
     ModuleExample(
         "A012",
         True,
-        "A012: Mocked active short course (<url2>)",
+        "A012: [Mocked active short course](fake_url2)",
     ),
     ModuleExample(
         "A888",
         True,
-        "A888: Mocked active postgrad module (<url3>)",
+        "A888: [Mocked active postgrad module](fake_url3)",
     ),
 ]
 
