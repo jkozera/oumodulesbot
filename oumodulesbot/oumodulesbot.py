@@ -58,6 +58,14 @@ async def claim_message(message_id):
         yield False
 
 
+async def is_message_claimed(message_id):
+    if os.environ.get("DISABLE_FIRESTORE") == "1":
+        return False
+    doc_ref = firestore_db.collection("message_ids").document(str(message_id))
+    snapshot = await doc_ref.get()
+    return snapshot.exists and not snapshot.get("can_retry")
+
+
 class OUModulesBot(discord.Client):
     MENTION_RE = re.compile(r"!" + MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE)
     MODULES_COUNT_LIMIT = 5
@@ -82,19 +90,35 @@ class OUModulesBot(discord.Client):
                 : self.MODULES_COUNT_LIMIT
             ]
         )
+        if not matches:
+            return
+
         any_found = False
-        if matches:
+
+        async def process():
+            nonlocal any_found
+            for code in matches:
+                code = code[1:].upper()
+                result = await self.backend.find_result_for_code(code)
+                if result:
+                    any_found = True
+                    results.append(result)
+                else:
+                    results.append(Result(code, "not found", None))
+
+        processed = False
+        if message.id in replies_cache:
+            # handle edited messages
+            if await is_message_claimed(message.id):
+                await process()
+                processed = True
+
+        if not processed:
             async with claim_message(message.id) as claimed:
                 if not claimed:
                     return
-                for code in matches:
-                    code = code[1:].upper()
-                    result = await self.backend.find_result_for_code(code)
-                    if result:
-                        any_found = True
-                        results.append(result)
-                    else:
-                        results.append(Result(code, "not found", None))
+                await process()
+
         if any_found:
             # don't spam unless we're sure we at least found some results
             await self.post_results(message, results)
