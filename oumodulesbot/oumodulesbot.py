@@ -126,7 +126,7 @@ class OUModulesBot(discord.Client):
     @classmethod
     def _format_result_url(cls, result: Result) -> str:
         if result.url:
-            return f"[{result.title}]({result.url})"
+            return f"[{result.title}](<{result.url}>)"
         else:
             return f"{result.title}"
 
