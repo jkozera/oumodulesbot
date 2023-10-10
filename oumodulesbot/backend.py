@@ -130,7 +130,7 @@ class OUModulesBackend:
             return cached_result
 
         async with asyncio.TaskGroup() as tg:  # type: ignore
-            unfinished = [
+            unfinished = {
                 # 2. Try SPARQL queries:
                 tg.create_task(find_module_or_qualification(code)),
                 # 3. Try scraping URL with HTML description
@@ -138,7 +138,7 @@ class OUModulesBackend:
                 tg.create_task(self._try_url(code)),
                 # 4. Try OUDA for old modules:
                 tg.create_task(self._try_ouda(code)),
-            ]
+            }
 
             while unfinished:
                 finished, unfinished = await asyncio.wait(
