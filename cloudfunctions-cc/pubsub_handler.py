@@ -53,7 +53,11 @@ async def find_modules(data):
         if not claimed:
             # Avoid replying twice by two instances.
             return
+        seen = set()
         for code in codes:
+            if code in seen:  # Avoid duplicates.
+                continue
+            seen.add(code)
             calls.append(backend.find_result_for_code(code.upper()))
         for code, result in zip(codes, await asyncio.gather(*calls)):
             if result:
