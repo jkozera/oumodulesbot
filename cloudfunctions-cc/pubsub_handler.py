@@ -3,22 +3,20 @@ import base64
 import dataclasses
 import json
 import logging
-import os
 import re
 from typing import List
 
+import functions_framework  # type: ignore
 import httpx
-import functions_framework
-from google.cloud import pubsub_v1
+from google.cloud import pubsub_v1  # type: ignore
 
+from oumodulesbot.ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
 from oumodulesbot.oumodulesbot import (
-    OUModulesBot,
     OUModulesBackend,
+    OUModulesBot,
     Result,
     claim_message,
 )
-from oumodulesbot.ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
-
 
 MODULE_OR_QUALIFICATION_CODE_RE = re.compile(
     MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
@@ -65,7 +63,8 @@ async def find_modules(data):
         response = FoundModules(results).as_response_json(data)
         log.info("Sending response: %s", response)
         result = httpx.patch(
-            f"https://discord.com/api/v10/webhooks/{APPLICATION_ID}/{data['token']}/messages/@original",
+            "https://discord.com/api/v10/webhooks/"
+            f"{APPLICATION_ID}/{data['token']}/messages/@original",
             json=response,
         )
         log.info("Result: %s", result.text)
@@ -79,6 +78,9 @@ class FoundModules:
         guild_id = input_data["guild_id"]
         channel_id = input_data["message"]["channel_id"]
         target_id = input_data["target_id"]
+        url = (
+            f"https://discord.com/channels/{guild_id}/{channel_id}/{target_id}"
+        )
         data = {
             "components": [
                 {
@@ -88,17 +90,17 @@ class FoundModules:
                             "type": 2,
                             "style": 5,
                             "label": "Jump to referenced message",
-                            "url": f"https://discord.com/channels/{guild_id}/{channel_id}/{target_id}",
+                            "url": url,
                         }
                     ],
                 }
             ],
         }
         if len(self.modules_list) > 1:
-            data["content"] = "Multiple results found.",
-            data["embeds"] = self._multiple_modules_embeds(),
+            data["content"] = "Multiple results found."
+            data["embeds"] = self._multiple_modules_embeds()
         else:
-            data["content"] = OUModulesBot.format_result(self.modules_list[0]),
+            data["content"] = OUModulesBot.format_result(self.modules_list[0])
         return data
 
     def _multiple_modules_embeds(self):
