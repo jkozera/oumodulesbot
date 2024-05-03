@@ -1,0 +1,115 @@
+import asyncio
+import base64
+import dataclasses
+import json
+import logging
+import os
+import re
+from typing import List
+
+import httpx
+import functions_framework
+from google.cloud import pubsub_v1
+
+from oumodulesbot.oumodulesbot import (
+    OUModulesBot,
+    OUModulesBackend,
+    Result,
+    claim_message,
+)
+from oumodulesbot.ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
+
+
+MODULE_OR_QUALIFICATION_CODE_RE = re.compile(
+    MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
+)
+APPLICATION_ID = 511181619785236500
+backend = OUModulesBackend()
+pubsub_client = pubsub_v1.PublisherClient()
+topic_path = pubsub_client.topic_path("ou-modules-bot", "interactions")
+
+log = logging.getLogger("main")
+event_loop = asyncio.new_event_loop()
+asyncio.set_event_loop(event_loop)
+
+
+@functions_framework.cloud_event
+def handle_pubsub(cloud_event):
+    logging.basicConfig(level=logging.INFO)
+    decoded = base64.b64decode(cloud_event.data["message"]["data"])
+    log.info("Received request: %s", decoded)
+    event_loop.run_until_complete(find_modules(json.loads(decoded)))
+
+
+async def find_modules(data):
+    message = data["message"]
+    content = message["content"]
+    results = []
+    calls = []
+    codes = MODULE_OR_QUALIFICATION_CODE_RE.findall(content)[
+        : OUModulesBot.MODULES_COUNT_LIMIT
+    ]
+    async with claim_message(
+        f'{data["target_id"]}_{data["interaction_id"]}'
+    ) as claimed:
+        if not claimed:
+            # Avoid replying twice by two instances.
+            return
+        for code in codes:
+            calls.append(backend.find_result_for_code(code.upper()))
+        for code, result in zip(codes, await asyncio.gather(*calls)):
+            if result:
+                results.append(result)
+            else:
+                results.append(Result(code.upper(), "Not found", None))
+        response = FoundModules(results).as_response_json(data)
+        log.info("Sending response: %s", response)
+        result = httpx.patch(
+            f"https://discord.com/api/v10/webhooks/{APPLICATION_ID}/{data['token']}/messages/@original",
+            json=response,
+        )
+        log.info("Result: %s", result.text)
+
+
+@dataclasses.dataclass
+class FoundModules:
+    modules_list: List[Result]
+
+    def as_response_json(self, input_data):
+        guild_id = input_data["guild_id"]
+        channel_id = input_data["message"]["channel_id"]
+        target_id = input_data["target_id"]
+        data = {
+            "components": [
+                {
+                    "type": 1,
+                    "components": [
+                        {
+                            "type": 2,
+                            "style": 5,
+                            "label": "Jump to referenced message",
+                            "url": f"https://discord.com/channels/{guild_id}/{channel_id}/{target_id}",
+                        }
+                    ],
+                }
+            ],
+        }
+        if len(self.modules_list) > 1:
+            data["content"] = "Multiple results found.",
+            data["embeds"] = self._multiple_modules_embeds(),
+        else:
+            data["content"] = OUModulesBot.format_result(self.modules_list[0]),
+        return data
+
+    def _multiple_modules_embeds(self):
+        return [
+            {
+                "fields": [
+                    {
+                        "name": m.code,
+                        "value": OUModulesBot.format_result(m, for_embed=True),
+                    }
+                    for m in self.modules_list
+                ],
+            }
+        ]

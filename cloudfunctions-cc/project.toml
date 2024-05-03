@@ -1,0 +1,22 @@
+[build]
+    builder = "gcr.io/buildpacks/builder:v1"
+
+[[build.env]]
+    name = "GOOGLE_FUNCTION_SIGNATURE_TYPE"
+    value = "http"
+
+[[build.env]]
+    name = "GOOGLE_FUNCTION_TARGET"
+    value = "interactions"
+
+[[build.env]]
+    name = "GOOGLE_CLEAR_SOURCE"
+    value = "false"
+
+[[build.env]]
+    name = "GOOGLE_RUNTIME"
+    value = "cpp"
+
+[[build.env]]
+    name = "CXXFLAGS"
+    value = "-Wno-register -Os"
