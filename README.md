@@ -1,6 +1,6 @@
 # OU Modules Bot
 
-Add it to your Discord server: https://add.modules-bot.ou-stem.club
+Add it to your Discord server: https://modules-bot.ou-stem.club/add
 
 OU Modules Bot is a project made for The Open University STEM Club's Discord. It's a Module Codes reference bot, useful in case you ever wonder what are the meanings of module codes which people mention. You can use it with the following types of commands:
 
