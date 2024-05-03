@@ -36,9 +36,9 @@ async def _db_claim_message(transaction, message_id, value) -> bool:
     return not claimed
 
 
-async def _db_retry_message(message_id) -> None:
+async def _db_retry_message(transaction, message_id) -> None:
     doc_ref = firestore_db.collection("message_ids").document(str(message_id))
-    await doc_ref.update(doc_ref, {"can_retry": True})
+    await transaction.update(transaction, doc_ref, {"can_retry": True})
 
 
 @contextlib.asynccontextmanager
@@ -46,14 +46,16 @@ async def claim_message(message_id):
     if os.environ.get("DISABLE_FIRESTORE") == "1":
         yield True
         return
+    transaction = firestore_db.transaction()
     if await _db_claim_message(
-        firestore_db.transaction(), message_id, datetime.datetime.now()
+        transaction, message_id, datetime.datetime.now()
     ):
         try:
             yield True
         except Exception:
             # Nothing has been posted yet.
-            await _db_retry_message(message_id)
+            await _db_retry_message(transaction, message_id)
+            raise
     else:
         yield False
 
