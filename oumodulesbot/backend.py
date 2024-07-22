@@ -1,4 +1,5 @@
 import asyncio
+import importlib
 import json
 import logging
 import re
@@ -6,8 +7,9 @@ from typing import Dict, Optional, Tuple
 
 import httpx
 
-from .ou_sparql_utils import find_module_or_qualification
-from .ou_utils import (
+import oumodulesbot
+from oumodulesbot.ou_sparql_utils import find_module_or_qualification
+from oumodulesbot.ou_utils import (
     MODULE_CODE_RE_TEMPLATE,
     MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE,
     Result,
@@ -57,12 +59,14 @@ def make_client():
     return httpx.AsyncClient(headers=headers)
 
 
+def get_cache_json():
+    return json.load(importlib.resources.files(oumodulesbot) / "cache.json")
+
+
 class OUModulesBackend:
     def __init__(self):
-        with open("cache.json", "r") as f:
-            cache_json = json.load(f)
         self.cache: Dict[str, CacheItem] = {
-            k: tuple(v) for k, v in cache_json.items()
+            k: tuple(v) for k, v in get_cache_json().items()
         }
 
     async def _try_cache(self, code) -> Optional[Result]:
