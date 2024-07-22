@@ -1,0 +1,14 @@
+[build]
+    builder = "gcr.io/buildpacks/builder:latest"
+
+[[build.env]]
+    name = "GOOGLE_RUNTIME"
+    value = "python"
+
+[[build.env]]
+    name = "GOOGLE_PYTHON_VERSION"
+    value = "3.11.x"
+
+[[build.env]]
+    name = "GOOGLE_ENTRYPOINT"
+    value = "interaction:handle_pubsub"
