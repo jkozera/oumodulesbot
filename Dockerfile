@@ -1,7 +1,7 @@
 FROM python:3.12
 
 ADD oumodulesbot /oumodulesbot
-ADD poetry.lock pyproject.toml cache.json /
+ADD poetry.lock pyproject.toml /
 
 RUN pip install $(grep -E '^requires = \[.poetry.*\]$' pyproject.toml | cut -d'"' -f2)
 RUN poetry install
