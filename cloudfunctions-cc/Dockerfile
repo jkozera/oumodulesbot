@@ -1,57 +1,13 @@
-### Copied from https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-c-plus-plus-service#writing
+# The base image is built with Dockerfile.base
+FROM stemclubmodulesbot/cloudfunctions-cc-base:latest AS build
 
-# We chose Alpine to build the image because it has good support for creating
-# statically-linked, small programs.
-FROM alpine:3.20 AS build
-
-# Install the typical development tools for C++, and
-# the base OS headers and libraries.
-RUN apk update && \
-    apk add \
-        bash \
-        build-base \
-        cmake \
-        curl \
-        git \
-        gcc \
-        g++ \
-        libc-dev \
-        linux-headers \
-        ninja \
-        perl \
-        python3 \
-        pkgconfig \
-        tar \
-        unzip \
-        zip
-
-# Use `vcpkg`, a package manager for C++, to install release binaries only
-WORKDIR /usr/local/vcpkg
-ENV VCPKG_FORCE_SYSTEM_BINARIES=1
-RUN curl -sSL "https://github.com/Microsoft/vcpkg/archive/2024.07.12.tar.gz" | \
-    tar --strip-components=1 -zxf - \
-    && for path in triplets/*.cmake triplets/community/*.cmake ; do \
-        echo 'set(VCPKG_BUILD_TYPE release)' >> $path ; \
-    done \
-    && ./bootstrap-vcpkg.sh -disableMetrics
-
-# Copy the source code to /v/source and compile it.
 COPY . /v/source
 RUN curl https://raw.githubusercontent.com/jkozera/oumodulesbot/main/oumodulesbot/cache.json -o /v/source/cache.json
 WORKDIR /v/source
 
-# Run the CMake configuration step, setting the options to create
-# a statically linked C++ program
-RUN cmake -S/v/source -B/v/binary -GNinja \
-    -DCMAKE_TOOLCHAIN_FILE=/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake \
-    -DCMAKE_BUILD_TYPE=Release
-RUN cat /v/binary/vcpkg-manifest-install.log
-
-RUN cmake --build /v/
-
 # Compile the binary and strip it to reduce its size.
 RUN cmake --build /v/binary
-RUN strip /v/binary/cloud_run_hello
+RUN strip /v/binary/interaction
 
 # Run tests
 RUN /v/binary/interaction_lib_test && /v/binary/verify_ed25519_test
