@@ -8,7 +8,7 @@ import re
 from typing import List
 
 import httpx
-from flask import Flask, request
+from flask import Flask, request  # type: ignore
 from google.cloud import pubsub_v1  # type: ignore
 
 from oumodulesbot.ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
