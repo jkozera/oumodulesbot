@@ -7,14 +7,19 @@ find_package(functions_framework_cpp REQUIRED)
 find_package(nlohmann_json 3.11.2 REQUIRED)
 find_package(OpenSSL REQUIRED)
 
-add_library(functions_framework_cpp_function
- interaction.cc interaction_lib.cc verify_ed25519.cc)
+add_library(interaction_lib interaction_lib.cc verify_ed25519.cc)
+target_compile_features(interaction_lib PRIVATE cxx_std_17)
 target_link_libraries(
     functions_framework_cpp_function
     functions-framework-cpp::framework
     google-cloud-cpp::pubsub google-cloud-cpp::pubsub_protos
     nlohmann_json::nlohmann_json
     OpenSSL::Crypto)
+
+add_executable(interaction interaction.cc)
+target_link_libraries(interaction interaction_lib)
+include(GNUInstallDirs)
+install(TARGETS interaction RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 include(FetchContent)
 FetchContent_Declare(
@@ -26,10 +31,10 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(
-    interaction_lib_test interaction_lib_test.cc interaction_lib.cc
+    interaction_lib_test interaction_lib_test.cc
 )
 target_link_libraries(
-    interaction_lib_test GTest::gtest_main nlohmann_json::nlohmann_json
+    interaction_lib_test interaction_lib GTest::gtest_main nlohmann_json::nlohmann_json
 )
 
 add_executable(
@@ -40,4 +45,4 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-gtest_discover_tests(interaction_lib_test)
+gtest_discover_tests(interaction_lib_test verify_ed25519_test)
