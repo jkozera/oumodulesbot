@@ -34,6 +34,7 @@ RUN curl -sSL "https://github.com/Microsoft/vcpkg/archive/2024.04.26.tar.gz" | \
 
 # Copy the source code to /v/source and compile it.
 COPY . /v/source
+RUN curl https://raw.githubusercontent.com/jkozera/oumodulesbot/main/oumodulesbot/cache.json -o /v/source/cache.json
 WORKDIR /v/source
 
 # Run the CMake configuration step, setting the options to create
@@ -63,6 +64,7 @@ COPY --from=build /v/binary/interaction /r
 COPY --from=build /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1
 COPY --from=build /usr/lib/libstdc++.so.6 /usr/lib/libstdc++.so.6
 COPY --from=build /usr/lib/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
+COPY --from=build /v/source/cache.json /r
 
 # Make the program the entry point.
 ENTRYPOINT [ "/r/interaction" ]

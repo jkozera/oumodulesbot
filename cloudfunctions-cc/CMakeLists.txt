@@ -10,7 +10,7 @@ find_package(OpenSSL REQUIRED)
 add_library(interaction_lib interaction_lib.cc verify_ed25519.cc)
 target_compile_features(interaction_lib PRIVATE cxx_std_17)
 target_link_libraries(
-    functions_framework_cpp_function
+    interaction_lib
     functions-framework-cpp::framework
     google-cloud-cpp::pubsub google-cloud-cpp::pubsub_protos
     nlohmann_json::nlohmann_json

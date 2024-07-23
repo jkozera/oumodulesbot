@@ -1,4 +1,5 @@
 #include <boost/algorithm/string/replace.hpp>
+#include <google/cloud/functions/framework.h>
 #include <google/cloud/functions/http_request.h>
 #include <google/cloud/functions/http_response.h>
 #include <google/cloud/pubsub/blocking_publisher.h>
@@ -67,4 +68,8 @@ gcf::HttpResponse interactions(const gcf::HttpRequest request) {
   return gcf::HttpResponse{}
       .set_header("Content-Type", "application/json")
       .set_payload(result);
+}
+
+int main(int argc, char* argv[]) {
+  return gcf::Run(argc, argv, gcf::MakeFunction(interactions));
 }
