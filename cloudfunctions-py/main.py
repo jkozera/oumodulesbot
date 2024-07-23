@@ -127,6 +127,7 @@ app = Flask(__name__)
 @app.route("/", methods=["POST"])
 def interaction():
     handle_pubsub(request.get_json())
+    return "OK"
 
 
 if __name__ == "__main__":
