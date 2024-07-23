@@ -3,11 +3,12 @@ import base64
 import dataclasses
 import json
 import logging
+import os
 import re
 from typing import List
 
-import functions_framework  # type: ignore
 import httpx
+from flask import Flask, request
 from google.cloud import pubsub_v1  # type: ignore
 
 from oumodulesbot.ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
@@ -31,10 +32,9 @@ event_loop = asyncio.new_event_loop()
 asyncio.set_event_loop(event_loop)
 
 
-@functions_framework.cloud_event
-def handle_pubsub(cloud_event):
+def handle_pubsub(data):
     logging.basicConfig(level=logging.INFO)
-    decoded = base64.b64decode(cloud_event.data["message"]["data"])
+    decoded = base64.b64decode(data["message"]["data"])
     log.info("Received request: %s", decoded)
     event_loop.run_until_complete(find_modules(json.loads(decoded)))
 
@@ -119,3 +119,15 @@ class FoundModules:
                 ],
             }
         ]
+
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def interaction():
+    handle_pubsub(request.get_json())
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
