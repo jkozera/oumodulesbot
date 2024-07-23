@@ -124,7 +124,7 @@ class FoundModules:
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=["POST"])
 def interaction():
     handle_pubsub(request.get_json())
 
