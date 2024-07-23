@@ -60,7 +60,8 @@ def make_client():
 
 
 def get_cache_json():
-    return json.load(importlib.resources.files(oumodulesbot) / "cache.json")
+    cache_file = importlib.resources.files(oumodulesbot) / "cache.json"
+    return json.load(cache_file.open("r"))
 
 
 class OUModulesBackend:
