@@ -25,11 +25,14 @@ RUN apk update && \
         unzip \
         zip
 
-# Use `vcpkg`, a package manager for C++, to install
+# Use `vcpkg`, a package manager for C++, to install release binaries only
 WORKDIR /usr/local/vcpkg
 ENV VCPKG_FORCE_SYSTEM_BINARIES=1
-RUN curl -sSL "https://github.com/Microsoft/vcpkg/archive/2024.04.26.tar.gz" | \
+RUN curl -sSL "https://github.com/Microsoft/vcpkg/archive/2024.07.12.tar.gz" | \
     tar --strip-components=1 -zxf - \
+    && for path in triplets/*.cmake triplets/community/*.cmake ; do \
+        echo 'set(VCPKG_BUILD_TYPE release)' >> $path ; \
+    done \
     && ./bootstrap-vcpkg.sh -disableMetrics
 
 # Copy the source code to /v/source and compile it.
@@ -42,6 +45,7 @@ WORKDIR /v/source
 RUN cmake -S/v/source -B/v/binary -GNinja \
     -DCMAKE_TOOLCHAIN_FILE=/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DCMAKE_BUILD_TYPE=Release
+RUN cat /v/binary/vcpkg-manifest-install.log
 
 RUN cmake --build /v/
 
