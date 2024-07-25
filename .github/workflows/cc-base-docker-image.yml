@@ -4,7 +4,9 @@ name: Docker Serverless Base Image CI
 on:
   push:
     branches: [ main ]
-    paths: [ cloudfunctions-cc/Dockerfile.base ]
+    paths:
+      - cloudfunctions-cc/Dockerfile.base1
+      - cloudfunctions-cc/Dockerfile.base2
 
 env:
   # the name will always be suffixed by '1' or '2'
@@ -48,7 +50,7 @@ jobs:
           file: cloudfunctions-cc/Dockerfile.base1
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }}1,push=false
-          tags: latest
+          tags: ${{ env.REGISTRY_IMAGE }}1:latest
 
       - name: Docker meta
         id: meta
