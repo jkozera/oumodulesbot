@@ -19,6 +19,8 @@ jobs:
           - linux/amd64
           - linux/arm64
     steps:
+      - uses: actions/checkout@v4
+
       - name: Prepare
         run: |
           platform=${{ matrix.platform }}
