@@ -48,7 +48,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           context: cloudfunctions-cc
           file: cloudfunctions-cc/Dockerfile.base1
-          outputs: type=docker
+          cache-to: type=local,dest=/tmp/buildx-cache,mode=max
           tags: ${{ env.REGISTRY_IMAGE }}1:latest
 
       - name: Docker meta
@@ -66,6 +66,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           context: cloudfunctions-cc
           file: cloudfunctions-cc/Dockerfile.base2
+          cache-from: type=local,src=/tmp/buildx-cache
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }}2,push-by-digest=true,name-canonical=true,push=true
 
