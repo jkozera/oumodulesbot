@@ -1,0 +1,13 @@
+# Version: 2024.07.25 (modify this line to trigger CI build)
+
+FROM stemclubmodulesbot/cloudfunctions-cc-base1 AS build
+
+# Copy the source code to /v/source and compile it.
+COPY . /v/source
+WORKDIR /v/source
+
+# Run the CMake configuration step, setting the options to create
+# a statically linked C++ program. This installs the vcpkg dependencies.
+RUN cmake -S/v/source -B/v/binary -GNinja \
+    -DCMAKE_TOOLCHAIN_FILE=/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake \
+    -DCMAKE_BUILD_TYPE=Release
