@@ -48,8 +48,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           context: cloudfunctions-cc
           file: cloudfunctions-cc/Dockerfile.base1
-          labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env.REGISTRY_IMAGE }}1,push=false
+          outputs: type=docker
           tags: ${{ env.REGISTRY_IMAGE }}1:latest
 
       - name: Docker meta
