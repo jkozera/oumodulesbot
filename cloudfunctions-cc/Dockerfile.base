@@ -1,5 +1,5 @@
 ### Copied from https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-c-plus-plus-service#writing
-# Version: 2024.07.24 (modify this line to trigger CI build)
+# Version: 2024.07.25 (modify this line to trigger CI build)
 
 # We chose Alpine to build the image because it has good support for creating
 # statically-linked, small programs.
