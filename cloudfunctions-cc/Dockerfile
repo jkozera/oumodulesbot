@@ -1,6 +1,4 @@
-# The base image is built with Dockerfile.base1 and Dockerfile.base2,
-# split in 2 parts to allow the GitHub Actions steps to fit in 6h each.
-FROM stemclubmodulesbot/cloudfunctions-cc-base2:latest AS build
+FROM stemclubmodulesbot/cloudfunctions-cc-base:latest AS build
 
 COPY . /v/source
 RUN curl https://raw.githubusercontent.com/jkozera/oumodulesbot/main/oumodulesbot/cache.json -o /v/source/cache.json
