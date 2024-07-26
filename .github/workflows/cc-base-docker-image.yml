@@ -5,11 +5,9 @@ on:
   push:
     branches: [ main ]
     paths:
-      - cloudfunctions-cc/Dockerfile.base1
-      - cloudfunctions-cc/Dockerfile.base2
+      - cloudfunctions-cc/Dockerfile.base
 
 env:
-  # the name will always be suffixed by '1' or '2'
   REGISTRY_IMAGE: stemclubmodulesbot/cloudfunctions-cc-base
 
 jobs:
@@ -48,34 +46,23 @@ jobs:
           username: ${{ secrets.CI_REGISTRY_USER }}
           password: ${{ secrets.CI_REGISTRY_PASSWORD }}
 
-      - name: Build part 1
-        id: build1
+      - name: Build
+        id: build
         uses: docker/build-push-action@v6
         with:
           platforms: ${{ matrix.platform }}
           context: cloudfunctions-cc
-          file: cloudfunctions-cc/Dockerfile.base1
-          push: true
-          tags: localhost:5000/${{ env.REGISTRY_IMAGE }}1:latest
+          file: cloudfunctions-cc/Dockerfile.base
+          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY_IMAGE }}2
+          images: ${{ env.REGISTRY_IMAGE }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push part 2 by digest
-        id: build2
-        uses: docker/build-push-action@v6
-        with:
-          platforms: ${{ matrix.platform }}
-          context: cloudfunctions-cc
-          file: cloudfunctions-cc/Dockerfile.base2
-          labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env.REGISTRY_IMAGE }}2,push-by-digest=true,name-canonical=true,push=true
-          build-args: BASE_IMAGE=localhost:5000/${{ env.REGISTRY_IMAGE }}1:latest
 
       - name: Export digest
         run: |
