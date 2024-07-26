@@ -71,6 +71,11 @@ async def query_data_open_ac_uk(query, offset, limit):
             logger.warning("data.open.ac.uk timeout")
             return []
     retval = []
+    try:
+        json = http_result.json()
+    except:
+        logger.exception("JSON parsing exception")
+        return retval
     for result in http_result.json()["results"]["bindings"]:
         item = {}
         for k in result:
