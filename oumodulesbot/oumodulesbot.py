@@ -36,9 +36,10 @@ async def _db_claim_message(transaction, message_id, value) -> bool:
     return not claimed
 
 
+@firestore.async_transactional
 async def _db_retry_message(transaction, message_id) -> None:
     doc_ref = firestore_db.collection("message_ids").document(str(message_id))
-    await transaction.update(doc_ref, {"can_retry": True})
+    transaction.update(doc_ref, {"can_retry": True})
 
 
 @contextlib.asynccontextmanager
