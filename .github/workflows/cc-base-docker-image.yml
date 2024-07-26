@@ -29,3 +29,4 @@ jobs:
           context: cloudfunctions-cc
           file: cloudfunctions-cc/Dockerfile.base
           push: true
+          tag: ${{ env.REGISTRY_IMAGE }}:latest
