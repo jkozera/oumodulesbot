@@ -11,13 +11,13 @@ import httpx
 from flask import Flask, request  # type: ignore
 from google.cloud import pubsub_v1  # type: ignore
 
-from oumodulesbot.ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
-from oumodulesbot.oumodulesbot import (
+from oumodulesbot.main import (
     OUModulesBackend,
     OUModulesBot,
     Result,
     claim_message,
 )
+from oumodulesbot.ou_utils import MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE
 
 MODULE_OR_QUALIFICATION_CODE_RE = re.compile(
     MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE

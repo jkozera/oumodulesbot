@@ -5,7 +5,7 @@ from unittest import mock
 import discord
 import pytest
 
-from oumodulesbot.oumodulesbot import OUModulesBot
+from oumodulesbot.main import OUModulesBot
 
 pytestmark = pytest.mark.asyncio
 
