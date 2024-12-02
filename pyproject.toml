@@ -12,7 +12,7 @@ authors = ["Jerzy Kozera <jerzy.kozera@gmail.com>"]
 "discord.py" = "^2.4.0"
 python = "^3.11"
 pylru = "^1.2.1"
-httpx = "^0.27.0"
+httpx = "^0.28.0"
 google-cloud-firestore = "^2.19.0"
 
 [tool.poetry.group.dev.dependencies]
