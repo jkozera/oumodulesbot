@@ -75,10 +75,7 @@ async def query_data_open_ac_uk(query, offset, limit):
         json = http_result.json()
         bindings = json["results"]["bindings"]
         for result in bindings:
-            item = {}
-            for k in result:
-                item[k] = result[k]["value"]
-        retval.append(item)
+            retval.append({k: result[k]["value"] for k in result})
     except Exception:
         logger.exception("JSON parsing exception")
         return retval
