@@ -65,6 +65,7 @@ async def query_data_open_ac_uk(query, offset, limit):
         try:
             http_result = await client.get(
                 f"http://data.open.ac.uk/sparql?{urllib.parse.urlencode(q)}",
+                follow_redirects=True,
                 headers={"Accept": "application/sparql-results+json"},
             )
         except httpx.ReadTimeout:
