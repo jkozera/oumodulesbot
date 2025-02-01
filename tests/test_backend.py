@@ -17,6 +17,13 @@ from oumodulesbot import backend
             ),
             "Exploring mental health and counselling",
         ),
+        (
+            (
+                "<title>\n\tMechanical Engineering | Open University | T329"
+                "\n</title>"
+            ),
+            "Mechanical Engineering",
+        ),
     ],
 )
 def test_html_title_in_html(html, expected_name):

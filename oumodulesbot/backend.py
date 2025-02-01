@@ -28,15 +28,25 @@ OUDA_URL_TEMPLATE = (
 TITLE_SEPARATOR = r"[^\s]"
 MAX_MODULE_NAME_LEN = 100
 MODULE_NAME_RE = rf"[A-Z][a-zA-Z0-9,.:;\(\) \-]{{1,{MAX_MODULE_NAME_LEN}}}?"
-HTML_TITLE_TEXT_RE_TEMPLATE = (
-    rf"{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
-    # the trailing '.*' allows ' Course' after 'Open University':
-    rf"\s*{TITLE_SEPARATOR}\s*({MODULE_NAME_RE})\s*"
-    rf"({TITLE_SEPARATOR}\s*Open University.*)?"
+
+HTML_TITLE_TEXT_RE_TEMPLATES = (
+    (
+        rf"{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
+        rf"\s*{TITLE_SEPARATOR}\s*(?P<name>{MODULE_NAME_RE})\s*"
+        # the trailing '.*' allows ' Course' after 'Open University':
+        rf"({TITLE_SEPARATOR}\s*Open University.*)?"
+    ),
+    (
+        rf"(?P<name>{MODULE_NAME_RE})"
+        # the trailing '.*' allows ' Course' after 'Open University':
+        rf"\s*({TITLE_SEPARATOR}\s*Open University.*)?\s*"
+        rf"{TITLE_SEPARATOR}\s{MODULE_OR_QUALIFICATION_CODE_RE_TEMPLATE}"
+    ),
 )
-HTML_TITLE_TAG_RE = re.compile(
-    rf"<title>\s*{HTML_TITLE_TEXT_RE_TEMPLATE}\s*</title>",
-)
+HTML_TITLE_TAG_RES = [
+    re.compile(rf"<title>\s*(?:{title_template})\s*</title>")
+    for title_template in HTML_TITLE_TEXT_RE_TEMPLATES
+]
 
 
 logger = logging.getLogger(__name__)
@@ -45,8 +55,9 @@ CacheItem = Tuple[str, Optional[str]]  # title, url
 
 
 def find_title_in_html(html: str) -> Optional[str]:
-    if found := HTML_TITLE_TAG_RE.search(html):
-        return found.groups()[0]
+    for re in HTML_TITLE_TAG_RES:
+        if found := re.search(html):
+            return found.group("name")
     return None
 
 
