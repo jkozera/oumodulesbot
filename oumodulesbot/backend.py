@@ -55,8 +55,8 @@ CacheItem = Tuple[str, Optional[str]]  # title, url
 
 
 def find_title_in_html(html: str) -> Optional[str]:
-    for re in HTML_TITLE_TAG_RES:
-        if found := re.search(html):
+    for regex in HTML_TITLE_TAG_RES:
+        if found := regex.search(html):
             return found.group("name")
     return None
 
