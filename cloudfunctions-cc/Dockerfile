@@ -1,7 +1,7 @@
 FROM stemclubmodulesbot/cloudfunctions-cc-base:latest AS build
 
 COPY . /v/source
-RUN curl https://raw.githubusercontent.com/jkozera/oumodulesbot/main/oumodulesbot/cache.json -o /v/source/cache.json
+RUN curl https://raw.githubusercontent.com/jmymay/oumodulesbot/main/oumodulesbot/cache.json -o /v/source/cache.json
 WORKDIR /v/source
 
 # Compile the binary and strip it to reduce its size.
